@@ -21,7 +21,7 @@ To run this project:
     - Go to Run → Edit Configurations
     - Add a new Tomcat Server → Local configuration
     - Under Deployment, click + → Artifact → your exploded WAR
-    - Set Application context to /rezzerv
+    - Set Application context to /rezzzerv
     - In Before launch, ensure Build Artifacts is selected
 
 ## Testing
@@ -60,7 +60,7 @@ To add:
 After building and launching the project through IntelliJ:
 
 - Open your browser and visit the homepage:  
-  (http://localhost:8080/rezzerv/)
+  (http://localhost:8080/rezzzerv/)
 
 - To confirm servlet setup, visit the TestServlet:  
-  (http://localhost:8080/rezzerv/info)
+  (http://localhost:8080/rezzzerv/info)
