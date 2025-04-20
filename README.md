@@ -6,7 +6,7 @@ To run this project:
 
 1. Clone the repository:
 
-   git clone https://github.com/your-team-name/capstone-project-rezzzerv.git
+   git clone git@github.com:it-sd-capstone/capstone-project-rezzzerv.git
 
 2. Open the project in IntelliJ IDEA
     - IntelliJ will prompt you to import from existing sources. Accept the default configuration.
