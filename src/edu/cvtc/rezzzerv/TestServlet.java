@@ -6,7 +6,7 @@ import javax.servlet.http.HttpServlet;
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
 
-@WebServlet("/info")   // or use "/info" if you still want index.html as your homepage
+@WebServlet("/info")  // This adjusts the URL path
 public class TestServlet extends HttpServlet {
   @Override
   protected void doGet(HttpServletRequest req, HttpServletResponse resp)
