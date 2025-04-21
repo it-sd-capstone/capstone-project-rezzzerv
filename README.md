@@ -1,5 +1,11 @@
 # ReZZZerv
 
+ReZZZerv is a hotel reservation system built as a web application designed for desktop access. 
+It allows users to register, log in, search for available rooms, view hotel details, and make or 
+cancel reservations. The system is backed by a relational database and emphasizes usability, clean 
+navigation, and a smooth booking experience for desktop users. The system is built using Java, 
+HTML, CSS, and JavaScript, and uses MySQL or SQLite for database storage.
+
 ## Installation
 
 To run this project:
