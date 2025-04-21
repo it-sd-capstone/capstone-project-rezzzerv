@@ -1,0 +1,10 @@
+services:
+  - type: web
+    name: rezzzerv
+    runtime: docker
+    plan: free
+    buildCommand: ./build.sh
+    startCommand: catalina.sh run
+    envVars:
+      - key: PORT
+        value: 8080
