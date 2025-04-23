@@ -43,21 +43,25 @@ To run the tests:
 
 Make sure the following JARs are in the lib/ folder and added to IntelliJ’s classpath with a Scope of Test:
 
+- apiguardian-api-1.1.2.jar
 - junit-jupiter-5.10.2.jar
 - junit-jupiter-api-5.10.2.jar
 - junit-jupiter-engine-5.10.2.jar
 - junit-jupiter-params-5.10.2.jar
 - junit-platform-commons-1.10.2.jar
-- apiguardian-api-1.1.2.jar
+- junit-platform-console-standalone-1.10.2.jar
+- junit-platform-engine-1.10.2.jar
+- opentest4j-1.3.0.jar
 - slf4j-api-2.0.9.jar
 - slf4j-nop-2.0.9.jar
+- sqlite-jdbc-344.1.0.jar
 
 
 To add:
 
 1. Go to File → Project Structure → Modules → Dependencies
 2. Click + → JARs or directories
-3. Select all JARs in the lib/ folder related to JUnit
+3. Select all JARs in the web/WEB-INF/lib/ folder
 4. Set the Scope to Test
 5. Apply and close
 
