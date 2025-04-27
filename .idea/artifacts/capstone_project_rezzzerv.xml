@@ -1,0 +1,6 @@
+<component name="ArtifactManager">
+  <artifact type="exploded-war" name="capstone-project-rezzzerv">
+    <output-path>$PROJECT_DIR$/out/artifacts/capstone_project_rezzzerv</output-path>
+    <root id="root" />
+  </artifact>
+</component>
