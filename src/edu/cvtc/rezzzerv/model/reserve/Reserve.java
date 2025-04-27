@@ -3,20 +3,21 @@ package edu.cvtc.rezzzerv.model.reserve;
 import edu.cvtc.rezzzerv.model.rooms.Room;
 import edu.cvtc.rezzzerv.model.users.User;
 
+import java.time.LocalDate;
 import java.time.LocalDateTime;
 
 public class Reserve {
     private Long id;
     private String status;
-    private LocalDateTime checkIn;
-    private LocalDateTime checkOut;
+    private LocalDate checkIn;
+    private LocalDate checkOut;
     private User user;
     private Room room;
 
     public Reserve() {
     }
 
-    public Reserve(Long id, String status, LocalDateTime checkIn, LocalDateTime checkOut, User user, Room room) {
+    public Reserve(Long id, String status, LocalDate checkIn, LocalDate checkOut, User user, Room room) {
         this.id = id;
         this.status = status;
         this.checkIn = checkIn;
@@ -41,19 +42,19 @@ public class Reserve {
         this.status = status;
     }
 
-    public LocalDateTime getCheckIn() {
+    public LocalDate getCheckIn() {
         return checkIn;
     }
 
-    public void setCheckIn(LocalDateTime checkIn) {
+    public void setCheckIn(LocalDate checkIn) {
         this.checkIn = checkIn;
     }
 
-    public LocalDateTime getCheckOut() {
+    public LocalDate getCheckOut() {
         return checkOut;
     }
 
-    public void setCheckOut(LocalDateTime checkOut) {
+    public void setCheckOut(LocalDate checkOut) {
         this.checkOut = checkOut;
     }
 
