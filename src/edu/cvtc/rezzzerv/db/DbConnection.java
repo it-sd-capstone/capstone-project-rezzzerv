@@ -27,13 +27,12 @@ public class DbConnection {
                 Properties properties = new Properties();
                 properties.setProperty("user", USER);
                 properties.setProperty("password", PASSWORD);
-                properties.setProperty("sslMode", "VERIFY_IDENTITY");
-                properties.setProperty("enabledTLSProtocols", "TLSv1.2");
 
-                String url = "jdbc:mysql://" + DB_HOST + "/" + DB_NAME;
+                String url = "jdbc:mysql://" + DB_HOST + ":3306/" + DB_NAME + "?serverTimezone=UTC";
 
                 connection = DriverManager.getConnection(url, properties);
-                System.out.println("PlanetScale connection established");
+                System.out.println("Local MySQL connection established");
+
             }
         } catch (SQLException e) {
             System.out.println("Error trying to connect to the database");
