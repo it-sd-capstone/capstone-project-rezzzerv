@@ -81,7 +81,7 @@ main {
 .hero {
     text-align: center;
     padding: 5rem 1rem;
-    background: linear-gradient(rgba(136, 96, 208, 0.7), rgba(136, 96, 208, 0.7)), url('images/hotel-bg.jpg');
+    background: linear-gradient(rgba(136, 96, 208, 0.7), rgba(136, 96, 208, 0.7)), url('../images/hotel-bg.jpg');
     background-size: cover;
     background-position: center;
     color: white;
@@ -194,7 +194,7 @@ footer {
 .page-header {
     text-align: center;
     padding: 3rem 1rem;
-    background: linear-gradient(rgba(136, 96, 208, 0.7), rgba(136, 96, 208, 0.7)), url('images/hotel-bg.jpg');
+    background: linear-gradient(rgba(136, 96, 208, 0.7), rgba(136, 96, 208, 0.7)), url('../images/hotel-bg.jpg');
     background-size: cover;
     background-position: center;
     color: white;
@@ -338,7 +338,7 @@ footer {
 .page-banner {
     text-align: center;
     padding: 4rem 1rem;
-    background: linear-gradient(rgba(136, 96, 208, 0.7), rgba(136, 96, 208, 0.7)), url('images/rooms-banner.jpg');
+    background: linear-gradient(rgba(136, 96, 208, 0.7), rgba(136, 96, 208, 0.7)), url('../images/rooms-banner.jpg');
     background-size: cover;
     background-position: center;
     color: white;
