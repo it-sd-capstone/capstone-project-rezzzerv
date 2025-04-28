@@ -145,7 +145,7 @@ replay_pid*
 *.sql
 
 # Environment files
-.env
+src/main/resources/.env
 .env.local
 
 # Node/JS build tools (optional)
