@@ -1,69 +1,79 @@
 # ReZZZerv
 
-ReZZZerv is a hotel reservation system built as a responsive web application. It allows users to 
-register, log in, search for available rooms, view hotel details, and make or cancel reservations. 
-The system is backed by a relational database and emphasizes usability, clean navigation, and a 
-smooth booking experience for desktop users. The system is built using Java, HTML, CSS, and JavaScript, 
-and uses MySQL or SQLite for database storage.
+ReZZZerv is a hotel reservation system built as a responsive web application. It allows users to register, log in, 
+search for available rooms, view hotel details, and make or cancel reservations. The system is backed by a MySQL 
+database and emphasizes usability, clean navigation, and a smooth booking experience for desktop and mobile users.
+
+The system is built using:
+- Java (Servlets)
+- HTML, CSS, JavaScript (Frontend)
+- MySQL (Database)
+- Hosted using Tomcat locally and Render for deployment
 
 ## Installation
 
 To run this project:
 
 1. Clone the repository:
-
    git clone git@github.com:it-sd-capstone/capstone-project-rezzzerv.git
 
 2. Open the project in IntelliJ IDEA
-    - IntelliJ will prompt you to import from existing sources. Accept the default configuration.
+    - IntelliJ may prompt you to import from existing sources. Accept the default configuration.
 
 3. Configure dependencies:
     - Go to File → Project Structure → Modules → Dependencies
     - Click the + button → JARs or directories
-    - Navigate to lib/servlet-api.jar and add it
-    - Set the Scope to Provided
+    - Navigate to the lib/ folder and add all the included JARs
 
 4. Set up your Tomcat server:
     - Go to Run → Edit Configurations
-    - Add a new Tomcat Server → Local configuration
-    - Under Deployment, click + → Artifact → your exploded WAR
-    - Set Application context to /rezzzerv
-    - In Before launch, ensure Build Artifacts is selected
+   
+    - Under Server Tab:
+      - Add a new Tomcat Server → Local configuration
+      - Change URL to http://localhost:8080/rezzzerv
+   
+    - Under Deployment Tab:
+      - click + → Artifact → your exploded WAR
+      - Change Application context to /rezzzerv
+   
+   - In Before launch, ensure Build Artifacts is selected
+   - Apply and Ok
+
+5. Configure Environment Variables
+   - Create a resources directory in src/main.
+   - Right-click on the resources folder and Mark Directory as Resources Root.
+   - Create an .env file in the resources folder.
+   - Add the following lines of text to the .env file using your local database credentials:
+       DB_HOST=localhost 
+       DB_NAME=rezzzerv_db
+       DB_USER=root
+       DB_PASSWORD=mysqlmysql
+
+6. Database Setup
+   - Ensure your MySQL server is running.
+   - Create the database schema by:
+     - Copying and pasting the text in the setup_db.txt file (in the db folder) into the query window.
+     - Execute (click the lightning bolt)
+   - Refresh schemas
+   - Right-click on rezzzerv_db and "Set As Default Schema"
+
 
 ## Testing
 
 We use JUnit to test application functionality.
 
-To run the tests:
+7. Test your Local MySQL connection is established:
+   - Open MainTest.java
+   - Right-click the file and select Run MainTest, or select Current File in the drop-down and Click Play
 
-- Open MainTest.java)
-- Right-click the file and select Run MainTest
+8. Test adding a user to the db:
+   - Open Main.java
+   - Right-click the file and select Run Main, or select Current File in the drop-down and Click Play
+   - Choose 1. Register Customer and follow the prompts
+   - Check that the new user was added in MySQL Workbench:
+     - refresh the rezzzerv_db schema
+     - right-click on users and choose "Select Rows"
 
-## Required JARs for Testing
-
-Make sure the following JARs are in the lib/ folder and added to IntelliJ’s classpath with a Scope of Test:
-
-- apiguardian-api-1.1.2.jar
-- junit-jupiter-5.10.2.jar
-- junit-jupiter-api-5.10.2.jar
-- junit-jupiter-engine-5.10.2.jar
-- junit-jupiter-params-5.10.2.jar
-- junit-platform-commons-1.10.2.jar
-- junit-platform-console-standalone-1.10.2.jar
-- junit-platform-engine-1.10.2.jar
-- opentest4j-1.3.0.jar
-- slf4j-api-2.0.9.jar
-- slf4j-nop-2.0.9.jar
-- sqlite-jdbc-344.1.0.jar
-
-
-To add:
-
-1. Go to File → Project Structure → Modules → Dependencies
-2. Click + → JARs or directories
-3. Select all JARs in the web/WEB-INF/lib/ folder
-4. Set the Scope to Test
-5. Apply and close
 
 ## Usage
 
