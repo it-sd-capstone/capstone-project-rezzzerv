@@ -17,7 +17,18 @@ public class DbConnection {
     public static Connection getConnection() {
         try {
             if (connection == null || connection.isClosed()) {
-                Dotenv dotenv = Dotenv.load();
+                //Dotenv dotenv = Dotenv.load();
+
+                Dotenv dotenv = Dotenv.configure()
+                        .directory("/etc/secrets") // for render
+                        .ignoreIfMalformed()
+                        .ignoreIfMissing()
+                        .load();
+
+                if (dotenv.get("DB_HOST") == null) {
+                    // if the file is not in /etc/secrets, load the local one
+                    dotenv = Dotenv.load();
+                }
 
                 String DB_HOST = dotenv.get("DB_HOST");
                 String DB_NAME = dotenv.get("DB_NAME");
