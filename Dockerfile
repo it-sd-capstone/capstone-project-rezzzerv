@@ -12,16 +12,15 @@ WORKDIR /app
 # Copy the entire repository
 COPY . /app/
 
-# Create necessary directories
-RUN mkdir -p /app/out/artifacts/ReZZZerv_war_exploded/WEB-INF/classes \
-    && mkdir -p /app/out/artifacts/ReZZZerv_war_exploded/WEB-INF/lib
+# Make build script executable
+RUN chmod +x /app/build.sh
 
-# Make build script executable and run it
-RUN chmod +x /app/build.sh && /app/build.sh
+# Run the build script
+RUN /app/build.sh
 
 # Copy the built application to Tomcat's webapps directory
 RUN mkdir -p /usr/local/tomcat/webapps/ROOT/ \
-    && cp -r /app/out/artifacts/ReZZZerv_war_exploded/* /usr/local/tomcat/webapps/ROOT/
+    && cp -r /app/build/* /usr/local/tomcat/webapps/ROOT/
 
 # Expose the port Tomcat runs on
 EXPOSE 8080
