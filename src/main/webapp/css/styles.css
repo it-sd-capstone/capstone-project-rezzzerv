@@ -585,3 +585,21 @@ footer {
     }
 }
 
+
+/* Default Disabled Button */
+.auth-btn:disabled {
+    background-color: grey;
+    cursor: not-allowed;
+}
+
+/* Enabled Button State */
+.auth-btn.enabled {
+    background-color: #8860d0;
+    color: white;
+    cursor: pointer;
+    border: none;
+}
+
+.auth-btn.enabled:hover {
+    background-color: #7a51c0;
+}
