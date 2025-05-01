@@ -603,3 +603,29 @@ footer {
 .auth-btn.enabled:hover {
     background-color: #7a51c0;
 }
+
+
+/* ===== Input Validation Checkmarks ===== */
+
+/* Wrap input fields with a container */
+.input-wrapper {
+    position: relative;
+}
+
+/* Base input style (already exists, no changes needed) */
+
+/* Add the checkmark when input is valid */
+.input-wrapper.valid input {
+    border-color: #8860d0;
+}
+
+.input-wrapper.valid::after {
+    content: "✓";
+    color: #8860d0;
+    font-size: 1.2rem;
+    position: absolute;
+    right: 10px;
+    top: 50%;
+    transform: translateY(-50%);
+    opacity: 1;
+}
