@@ -11,14 +11,14 @@
   <nav>
     <div class="logo"><a href="index.html">ReZZZerv</a></div>
     <ul class="nav-main">
-      <li><a href="index.html">Home</a></li>
-      <li><a href="rooms.html">Rooms</a></li>
+      <li><a href="index.jsp">Home</a></li>
+      <li><a href="rooms.jsp">Rooms</a></li>
       <li><a href="booking.jsp">Book Now</a></li>
-      <li><a href="contact.html">Contact</a></li>
+      <li><a href="contact.jsp">Contact</a></li>
     </ul>
     <ul class="nav-auth">
-      <li><a href="login.html" class="login-link">Login</a></li>
-      <li><a href="register.html" class="register-link active">Register</a></li>
+      <li><a href="login.jsp" class="login-link">Login</a></li>
+      <li><a href="register.jsp" class="register-link active">Register</a></li>
     </ul>
   </nav>
 </header>
