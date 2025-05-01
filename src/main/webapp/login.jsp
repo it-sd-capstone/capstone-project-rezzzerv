@@ -9,15 +9,15 @@
 <body>
 <header>
     <nav>
-        <div class="logo"><a href="index.html">ReZZZerv</a></div>
+        <div class="logo"><a href="index.jsp">ReZZZerv</a></div>
         <ul class="nav-main">
-            <li><a href="index.html">Home</a></li>
-            <li><a href="rooms.html">Rooms</a></li>
+            <li><a href="index.jsp">Home</a></li>
+            <li><a href="rooms.jsp">Rooms</a></li>
             <li><a href="booking.jsp">Book Now</a></li>
-            <li><a href="contact.html">Contact</a></li>
+            <li><a href="contact.jsp">Contact</a></li>
         </ul>
         <ul class="nav-auth">
-            <li><a href="login.html" class="login-link active">Login</a></li>
+            <li><a href="login.jsp" class="login-link active">Login</a></li>
             <li><a href="register.jsp" class="register-link">Register</a></li>
         </ul>
     </nav>
@@ -25,14 +25,18 @@
 
 <main>
     <section class="auth-container">
-        <h1 class="auth-title">Login</h1>
-        <form action="/login" method="POST" class="auth-form">
-            <input type="email" name="email" placeholder="Email" required>
-            <input type="password" name="password" placeholder="Password" required>
-            <button type="submit" class="btn auth-btn">Log in</button>
+        <h1 class="auth-title">Log In</h1>
+        <form action="login" method="POST" class="auth-form" id="login-form">
+            <div class="input-wrapper">
+                <input type="email" id="login-email" name="email" placeholder="Email" required>
+            </div>
+            <div class="input-wrapper">
+                <input type="password" id="login-password" name="password" placeholder="Password" required>
+            </div>
+            <button type="submit" class="btn auth-btn" id="login-btn" disabled>Log in</button>
         </form>
         <p class="auth-link">
-            <a href="register.jsp">Register</a>
+            Don't have an account? <a href="register.jsp">Register</a>
         </p>
     </section>
 </main>
