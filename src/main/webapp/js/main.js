@@ -16,6 +16,15 @@ document.addEventListener('DOMContentLoaded', () => {
         nav.appendChild(li);
     }
 
+    // Utility function for validation forms
+    function toggleValidClass(input, isValid) {
+        const wrapper = input.parentElement;
+        if (isValid) {
+            wrapper.classList.add('valid');
+        } else {
+            wrapper.classList.remove('valid');
+        }
+    }
 
     // Register Form Validation
     const registerForm = document.getElementById('register-form');
@@ -52,20 +61,40 @@ document.addEventListener('DOMContentLoaded', () => {
             registerBtn.classList.toggle('enabled', isFormValid);
         }
 
-        function toggleValidClass(input, isValid) {
-            const wrapper = input.parentElement;
-            if (isValid) {
-                wrapper.classList.add('valid');
-            } else {
-                wrapper.classList.remove('valid');
-            }
-        }
-
         nameInput.addEventListener('input', validateForm);
         lastNameInput.addEventListener('input', validateForm);
         phoneInput.addEventListener('input', validateForm);
         emailInput.addEventListener('input', validateForm);
         passwordInput.addEventListener('input', validateForm);
         confirmPasswordInput.addEventListener('input', validateForm);
+    }
+
+
+    //Login Form Validation
+    const loginForm = document.getElementById('login-form');
+    const loginBtn = document.getElementById('login-btn');
+
+    if (loginForm && loginBtn) {
+        const loginEmailInput = document.getElementById('login-email');
+        const loginPasswordInput = document.getElementById('login-password');
+
+        const emailRegex = /^[^\s@]+@[^\s@]+\.[^\s@]+$/;
+
+        function validateLoginForm() {
+            const isEmailValid = emailRegex.test(loginEmailInput.value.trim());
+            const isPasswordFilled = loginPasswordInput.value.trim().length >= 8;
+
+            const isLoginValid = isEmailValid && isPasswordFilled;
+
+            loginBtn.disabled = !isLoginValid;
+            loginBtn.classList.toggle('enabled', isLoginValid);
+
+            // OPTIONAL: We can add checkmarks if we want them on login too
+            // toggleValidClass(loginEmailInput, isEmailValid);
+            // toggleValidClass(loginPasswordInput, isPasswordFilled);
+        }
+
+        loginEmailInput.addEventListener('input', validateLoginForm);
+        loginPasswordInput.addEventListener('input', validateLoginForm);
     }
 });
