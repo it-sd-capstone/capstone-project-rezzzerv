@@ -17,11 +17,12 @@ public class RegistrationServlet extends HttpServlet {
         userService = new UserService();
     }
 
-
+    @Override
     public void doGet(HttpServletRequest request, HttpServletResponse response){
 
     }
 
+    @Override
     public void doPost(HttpServletRequest request, HttpServletResponse response) throws IOException {
         String name = request.getParameter("name");
         String lastName = request.getParameter("lastName");
@@ -45,8 +46,13 @@ public class RegistrationServlet extends HttpServlet {
         //save user created
         userService.registerUser(customer);
 
-        // after creating the user redirect to login page
-        response.sendRedirect("login.html");
+        // After successful registration, forward to success page
+        try {
+            request.getRequestDispatcher("success.jsp").forward(request, response);
+        } catch (Exception e) {
+            e.printStackTrace();
+            response.sendRedirect("register.jsp");
+        }
 
     }
 }
