@@ -26,14 +26,26 @@
 <main>
   <section class="auth-container">
     <h1 class="auth-title">Create an Account</h1>
-    <form id="register-form" action="register" method="POST" class="auth-form">
-      <input type="text" id="name" name="name" placeholder="Name" required>
-      <input type="text" id="lastName" name="lastName" placeholder="Last name" required>
-      <input type="email" id="email" name="email" placeholder="Email" required>
-      <input type="text" id="phone" name="phone" placeholder="Phone" required>
-      <input type="password" id="password" name="password" placeholder="Password" required>
-      <input type="password" id="confirm-password" name="confirm-password" placeholder="Confirm Password" required>
-      <button type="submit" id="register-btn" class="btn auth-btn" disabled>Register</button>
+    <form action="register" method="POST" class="auth-form" id="register-form">
+      <div class="input-wrapper">
+        <input type="text" id="name" name="name" placeholder="Name" required>
+      </div>
+      <div class="input-wrapper">
+        <input type="text" id="lastName" name="lastName" placeholder="Last name" required>
+      </div>
+      <div class="input-wrapper">
+        <input type="email" id="email" name="email" placeholder="Email" required>
+      </div>
+      <div class="input-wrapper">
+        <input type="text" id="phone" name="phone" placeholder="Phone" required>
+      </div>
+      <div class="input-wrapper">
+        <input type="password" id="password" name="password" placeholder="Password" required>
+      </div>
+      <div class="input-wrapper">
+        <input type="password" id="confirm-password" name="confirm-password" placeholder="Confirm Password" required>
+      </div>
+      <button type="submit" class="btn auth-btn" id="register-btn">Register</button>
     </form>
 
     <p class="auth-link">
