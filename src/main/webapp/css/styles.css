@@ -605,14 +605,10 @@ footer {
 }
 
 
-/* ===== Input Validation Checkmarks ===== */
-
 /* Wrap input fields with a container */
 .input-wrapper {
     position: relative;
 }
-
-/* Base input style (already exists, no changes needed) */
 
 /* Add the checkmark when input is valid */
 .input-wrapper.valid input {

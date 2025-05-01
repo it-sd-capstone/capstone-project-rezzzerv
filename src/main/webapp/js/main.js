@@ -16,7 +16,7 @@ document.addEventListener('DOMContentLoaded', () => {
         nav.appendChild(li);
     }
 
-    
+
     // Register Form Validation
     const registerForm = document.getElementById('register-form');
     const registerBtn = document.getElementById('register-btn');
@@ -32,17 +32,33 @@ document.addEventListener('DOMContentLoaded', () => {
         const emailRegex = /^[^\s@]+@[^\s@]+\.[^\s@]+$/;
 
         function validateForm() {
-            const isNameValid = nameInput.value.trim().length > 0;
-            const isLastNameValid = lastNameInput.value.trim().length > 0;
-            const isPhoneValid = phoneInput.value.trim().length > 0;
+            const isNameValid = nameInput.value.trim().length >= 2;
+            const isLastNameValid = lastNameInput.value.trim().length >= 2;
+            const isPhoneValid = phoneInput.value.trim().length >= 10;
             const isEmailValid = emailRegex.test(emailInput.value.trim());
             const isPasswordValid = passwordInput.value.length >= 8;
             const isPasswordMatch = passwordInput.value === confirmPasswordInput.value;
+
+            toggleValidClass(nameInput, isNameValid);
+            toggleValidClass(lastNameInput, isLastNameValid);
+            toggleValidClass(phoneInput, isPhoneValid);
+            toggleValidClass(emailInput, isEmailValid);
+            toggleValidClass(passwordInput, isPasswordValid);
+            toggleValidClass(confirmPasswordInput, isPasswordMatch);
 
             const isFormValid = isNameValid && isLastNameValid && isPhoneValid && isEmailValid && isPasswordValid && isPasswordMatch;
 
             registerBtn.disabled = !isFormValid;
             registerBtn.classList.toggle('enabled', isFormValid);
+        }
+
+        function toggleValidClass(input, isValid) {
+            const wrapper = input.parentElement;
+            if (isValid) {
+                wrapper.classList.add('valid');
+            } else {
+                wrapper.classList.remove('valid');
+            }
         }
 
         nameInput.addEventListener('input', validateForm);
