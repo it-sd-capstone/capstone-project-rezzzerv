@@ -49,7 +49,7 @@
     </form>
 
     <p class="auth-link">
-      Already have an account? <a href="login.html">Log in</a>
+      Already have an account? <a href="login.jsp">Log in</a>
     </p>
   </section>
 </main>

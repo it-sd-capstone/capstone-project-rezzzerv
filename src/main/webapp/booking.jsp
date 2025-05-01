@@ -58,7 +58,7 @@
             <li><a href="contact.html">Contact</a></li>
         </ul>
         <ul class="nav-auth">
-            <li><a href="login.html" class="login-link">Login</a></li>
+            <li><a href="login.jsp" class="login-link">Login</a></li>
             <li><a href="register.html" class="register-link">Register</a></li>
         </ul>
     </nav>
