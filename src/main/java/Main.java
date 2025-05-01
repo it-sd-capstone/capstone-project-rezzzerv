@@ -1,4 +1,7 @@
+import daos.RoomDao;
 import daos.UserDao;
+import model.rooms.Room;
+import model.rooms.RoomConstruction;
 import model.users.Administrator;
 import model.users.Customer;
 import model.users.User;
@@ -13,6 +16,7 @@ public class Main {
        //Testing CRUD for User
 
         UserDao userDao = new UserDao();
+        RoomDao roomDao = new RoomDao();
         Scanner sc = new Scanner(System.in);
         boolean exit = false;
 
@@ -24,6 +28,12 @@ public class Main {
             System.out.println("4. update user");
             System.out.println("5. Delete user");
             System.out.println("6. search  user by email");
+            // testing crud room
+            System.out.println("7. create a Room");
+            System.out.println("8. List of Rooms");
+            System.out.println("9. Get room by id");
+            System.out.println("10. Eliminate room by id");
+            System.out.println("11. Update room by id");
 
             System.out.print("Choose an option: ");
 
@@ -116,6 +126,87 @@ public class Main {
                     } else {
                         System.out.println("No user found with that email.");
                     }
+                    break;
+                case 7:
+                    System.out.println("insert Room Number");
+                    int roomNumber = sc.nextInt();
+                    sc.nextLine();
+
+                    System.out.println("insert Room type: example Basic, Premium, Presidential");
+                    String roomType = sc.nextLine();
+
+                    System.out.println("Room will be available? (true/false)");
+                    boolean available = sc.nextBoolean();
+                    sc.nextLine();
+
+                    System.out.println("insert Room price (example. 150.00):");
+                    double price = sc.nextDouble();
+                    sc.nextLine();
+
+                    // pass values to room construction
+                    Room room = RoomConstruction.createRoom(roomType, null, roomNumber, available, price);
+                    roomDao.insertRoom(room);
+                    break;
+                case 8:
+                    System.out.println("Room List....");
+                    System.out.println(roomDao.getAll());
+                    break;
+                case 9:
+                    System.out.println("insert Id of the Room to look For");
+                    Long roomid = Long.parseLong(sc.nextLine());
+                    System.out.println(roomDao.getRoomById(roomid));
+                    break;
+                case 10:
+                    System.out.println("insert room id to Eliminate");
+                    Long roomIdToDelete = Long.parseLong(sc.nextLine());
+                    Room roomToDelete = roomDao.getRoomById(roomIdToDelete);
+
+                    if (roomToDelete != null){
+                        roomDao.deleteRoom(roomIdToDelete);
+                        System.out.println("Room eliminated =" + roomIdToDelete);
+                    }else {
+                        System.out.println("room with id = " + roomIdToDelete + " was not found");
+                    }
+                    break;
+                case 11:
+                    System.out.println("Insert Room ID to Update");
+                    Long roomIdUpdate = Long.parseLong(sc.nextLine());
+                    Room roomToUpdate = roomDao.getRoomById(roomIdUpdate);
+
+                    if (roomToUpdate == null) {
+                        System.out.println("Room not found.");
+                        break;
+                    }
+
+                    System.out.println("Current room info: " + roomToUpdate);
+
+                    System.out.println("Enter new room number:");
+                    int newNumber = sc.nextInt();
+
+                    System.out.println("set Room availability (true/false)");
+                    boolean roomAvailable = sc.nextBoolean();
+                    sc.nextLine();
+
+                    System.out.println("Enter new type (Basic, Premium, or Presidential)");
+                    String newType = sc.nextLine();
+
+                    // new price
+                    System.out.println("Enter new price (ej. 220.50):");
+                    double newPrice = sc.nextDouble();
+                    sc.nextLine();
+
+                    // update room
+                    Room updatedRoom = RoomConstruction.createRoom(
+                            newType,
+                            roomToUpdate.getId(),
+                            newNumber,
+                            roomAvailable,
+                            newPrice
+                    );
+
+                    roomDao.updateRoom(updatedRoom);
+                    System.out.println("Room updated successfully.");
+                    System.out.println("New room info: " + updatedRoom);
                     break;
                 case 0:
                     exit = true;

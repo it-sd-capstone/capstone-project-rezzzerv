@@ -5,14 +5,20 @@ public abstract class Room {
     private Long id;
     private int roomNumber;
     private boolean available = true;
+    //new attributes so the price is not hard coded
+    private String type;
+    private double price;
 
     public Room() {
     }
 
-    public Room(Long id, int roomNumber, boolean available) {
+    public Room(Long id, int roomNumber, boolean available, String type, double price) {
         this.id = id;
         this.roomNumber = roomNumber;
         this.available = available;
+        // new attributes
+        this.type = type;
+        this.price = price;
     }
 
     public Long getId() {
@@ -40,14 +46,27 @@ public abstract class Room {
         this.available = available;
     }
 
-    public abstract double getPrice();
+    //new getter and setters
+    public String getType() {
+        return type;
+    }
 
-    public abstract String getType();
+    protected void setType(String type) {
+        this.type = type;
+    }
+
+    public double getPrice() {
+        return price;
+    }
+
+    protected void setPrice(double price) {
+        this.price = price;
+    }
 
     @Override
     public String toString() {
         return "Room Id: " + id + " room number= " + roomNumber + " available= "
-                + available + " type= " + getType() + ", Price = " + getPrice() + "\n";
+                + available + " type= " + type + ", Price = " + price + "\n";
     }
 }
 
