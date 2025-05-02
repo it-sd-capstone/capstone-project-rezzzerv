@@ -13,7 +13,7 @@
   <nav>
     <div class="logo"><a href="index.jsp">ReZZZerv</a></div>
     <ul class="nav-main">
-      <li><a href="index.jsp">Home</a></li>
+      <li><a href="index.jsp" class="active">Home</a></li>
       <li><a href="rooms.jsp">Rooms</a></li>
       <li><a href="booking.jsp">Book Now</a></li>
       <li><a href="contact.jsp">Contact</a></li>

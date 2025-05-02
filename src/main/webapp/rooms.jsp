@@ -5,13 +5,13 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Our Rooms - Rezzzerv</title>
+    <title>ReZZZerv - Our Rooms</title>
     <link rel="stylesheet" href="css/styles.css">
 </head>
 <body>
 <header>
     <nav>
-        <div class="logo"><a href="index.jsp">Rezzzerv</a></div>
+        <div class="logo"><a href="index.jsp">ReZZZerv</a></div>
         <ul class="nav-main">
             <li><a href="index.jsp">Home</a></li>
             <li><a href="rooms.jsp" class="active">Rooms</a></li>

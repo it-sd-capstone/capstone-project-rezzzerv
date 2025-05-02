@@ -16,7 +16,7 @@
             <li><a href="index.jsp">Home</a></li>
             <li><a href="rooms.jsp">Rooms</a></li>
             <li><a href="booking.jsp">Book Now</a></li>
-            <li><a href="contact.jsp">Contact</a></li>
+            <li><a href="contact.jsp" class="active">Contact</a></li>
         </ul>
         <ul class="nav-auth">
             <li><a href="login.jsp" class="login-link">Login</a></li>
