@@ -1,22 +1,46 @@
 <%@ page language="java" contentType="text/html; charset=UTF-8" pageEncoding="UTF-8"%>
-<%@ page import="java.util.Date" %>
+<%@ page import="java.util.*" %>
 <%@ page import="java.text.SimpleDateFormat" %>
-<%@ page import="java.util.Calendar" %>
-<%@ page import="java.util.HashMap" %>
-<%@ page import="java.util.Map" %>
+<%@ page import="daos.RoomDao" %>
+<%@ page import="daos.RoomTypeDao" %>
+<%@ page import="model.rooms.Room" %>
+<%@ page import="model.rooms.RoomType" %>
 
 <%
-    // This would normally come from database
-    // For now, we'll use hardcoded values
+    // Maps to store room data
     Map<String, Integer> roomInventory = new HashMap<>();
-    roomInventory.put("Basic", 18);
-    roomInventory.put("Premium", 12);
-    roomInventory.put("Presidential", 4);
-
     Map<String, Double> roomPrices = new HashMap<>();
-    roomPrices.put("Basic", 139.59);
-    roomPrices.put("Premium", 219.59);
-    roomPrices.put("Presidential", 499.59);
+
+    try {
+        // Get room types and their prices from database
+        RoomTypeDao roomTypeDao = new RoomTypeDao();
+        List<RoomType> roomTypes = roomTypeDao.getAllRoomTypes();
+
+        for (RoomType type : roomTypes) {
+            String typeName = type.getName();
+            double price = type.getPrice();
+
+            // Store price in the map
+            roomPrices.put(typeName, price);
+
+            // Count available rooms of this type
+            int availableCount = roomTypeDao.countAvailableRoomsByType(typeName);
+            roomInventory.put(typeName, availableCount);
+        }
+    } catch (Exception e) {
+        // If database access fails, use fallback values
+        System.err.println("Error accessing database: " + e.getMessage());
+        e.printStackTrace();
+
+        // Fallback values
+        roomInventory.put("Basic", 18);
+        roomInventory.put("Premium", 12);
+        roomInventory.put("Presidential", 4);
+
+        roomPrices.put("Basic", 139.59);
+        roomPrices.put("Premium", 219.59);
+        roomPrices.put("Presidential", 499.59);
+    }
 
     // Get today's date and format it for the date picker min attribute
     SimpleDateFormat dateFormat = new SimpleDateFormat("yyyy-MM-dd");
@@ -36,8 +60,10 @@
     request.setAttribute("basicPrice", roomPrices.get("Basic"));
     request.setAttribute("premiumPrice", roomPrices.get("Premium"));
     request.setAttribute("presidentialPrice", roomPrices.get("Presidential"));
-%>
 
+    // Check for error message
+    String errorMessage = (String) request.getAttribute("errorMessage");
+%>
 <!DOCTYPE html>
 <html lang="en">
 <head>
@@ -50,16 +76,16 @@
 <body>
 <header>
     <nav>
-        <div class="logo"><a href="index.html">ReZZZerv</a></div>
+        <div class="logo"><a href="index.jsp">ReZZZerv</a></div>
         <ul class="nav-main">
-            <li><a href="index.html">Home</a></li>
-            <li><a href="rooms.html">Rooms</a></li>
+            <li><a href="index.jsp">Home</a></li>
+            <li><a href="rooms.jsp">Rooms</a></li>
             <li><a href="booking.jsp" class="active">Book Now</a></li>
-            <li><a href="contact.html">Contact</a></li>
+            <li><a href="contact.jsp">Contact</a></li>
         </ul>
         <ul class="nav-auth">
             <li><a href="login.jsp" class="login-link">Login</a></li>
-            <li><a href="register.html" class="register-link">Register</a></li>
+            <li><a href="register.jsp" class="register-link">Register</a></li>
         </ul>
     </nav>
 </header>
@@ -71,8 +97,14 @@
     </section>
 
     <section class="booking-container">
+        <% if (errorMessage != null && !errorMessage.isEmpty()) { %>
+        <div class="error-message">
+            <%= errorMessage %>
+        </div>
+        <% } %>
+
         <div class="booking-form">
-            <form action="processBooking" method="post" id="bookingForm">
+            <form action="processReservation" method="post" id="bookingForm">
                 <div class="form-group date-inputs">
                     <div>
                         <label for="checkIn">Check-in Date:</label>
@@ -85,17 +117,6 @@
                                min="<%= tomorrow %>" max="<%= maxDate %>" value="<%= tomorrow %>">
                     </div>
                 </div>
-
-                <div class="form-group">
-                    <label for="guests">Number of Guests:</label>
-                    <select id="guests" name="guests" required>
-                        <option value="1">1 Guest</option>
-                        <option value="2" selected>2 Guests</option>
-                        <option value="3">3 Guests</option>
-                        <option value="4">4 Guests</option>
-                    </select>
-                </div>
-
                 <div class="form-group">
                     <label>Select Room Type:</label>
                     <input type="hidden" id="roomType" name="roomType" value="">
@@ -106,14 +127,12 @@
                             <div class="room-availability"><%= roomInventory.get("Basic") %> rooms available</div>
                             <p>Perfect for solo travelers or couples</p>
                         </div>
-
                         <div class="room-option" data-room-type="Premium" onclick="selectRoom('Premium')">
                             <h3>Premium Room</h3>
                             <div class="room-price">$<%= roomPrices.get("Premium") %>/night</div>
                             <div class="room-availability"><%= roomInventory.get("Premium") %> rooms available</div>
                             <p>Spacious room with premium amenities</p>
                         </div>
-
                         <div class="room-option" data-room-type="Presidential" onclick="selectRoom('Presidential')">
                             <h3>Presidential Suite</h3>
                             <div class="room-price">$<%= roomPrices.get("Presidential") %>/night</div>
@@ -122,20 +141,17 @@
                         </div>
                     </div>
                 </div>
-
                 <div class="booking-summary" id="bookingSummary">
                     <h3>Booking Summary</h3>
                     <p><strong>Check-in:</strong> <span id="summaryCheckIn"></span></p>
                     <p><strong>Check-out:</strong> <span id="summaryCheckOut"></span></p>
-                    <p><strong>Guests:</strong> <span id="summaryGuests"></span></p>
                     <p><strong>Room Type:</strong> <span id="summaryRoomType"></span></p>
                     <p><strong>Nights:</strong> <span id="summaryNights"></span></p>
                     <div class="booking-total">
                         Total: $<span id="summaryTotal"></span>
                     </div>
                 </div>
-
-                <button type="submit" class="booking-btn">Complete Booking</button>
+                <button type="submit" class="booking-btn">Proceed to Payment</button>
             </form>
         </div>
     </section>
@@ -149,8 +165,7 @@
 <div id="roomPrices"
      data-basic-price="<%= roomPrices.get("Basic") %>"
      data-premium-price="<%= roomPrices.get("Premium") %>"
-     data-presidential-price="<%= roomPrices.get("Presidential") %>">
-</div>
+     data-presidential-price="<%= roomPrices.get("Presidential") %>"></div>
 
 <script src="js/booking.js"></script>
 </body>

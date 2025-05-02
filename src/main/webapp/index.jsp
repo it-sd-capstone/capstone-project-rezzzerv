@@ -9,13 +9,13 @@
 <body>
 <header>
   <nav>
-    <div class="logo"><a href="index.html">ReZZZerv</a></div>
+    <div class="logo"><a href="index.jsp">ReZZZerv</a></div>
     <ul class="nav-main">
-      <li><a href="index.html">Home</a></li>
-      <li><a href="rooms.html">Rooms</a></li>
+      <li><a href="index.jsp">Home</a></li>
+      <li><a href="rooms.jsp">Rooms</a></li>
       <li><a href="booking.jsp">Book Now</a></li>
-      <li><a href="contact.html">Contact</a></li>
-      <li><a href="payment.html">Payment</a></li>
+      <li><a href="contact.jsp">Contact</a></li>
+      <li><a href="payment.jsp">Payment</a></li>
     </ul>
     <ul class="nav-auth">
       <li><a href="login.jsp" class="login-link">Login</a></li>

@@ -11,9 +11,9 @@
     <body>
         <header>
             <nav>
-                <div class="logo"><a href="index.html">ReZZZerv</a></div>
+                <div class="logo"><a href="index.jsp">ReZZZerv</a></div>
                 <ul class="nav-main">
-                    <li><a href="index.html">Home</a></li>
+                    <li><a href="index.jsp">Home</a></li>
                 </ul>
                 <ul class="nav-auth">
                     <li><a href="logout.html" class="login-link">Logout</a></li>

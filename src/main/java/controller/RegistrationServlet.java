@@ -32,7 +32,7 @@ public class RegistrationServlet extends HttpServlet {
         String confirmPassword = request.getParameter("confirm-password");
 
         if (!password.equals(confirmPassword)){
-            response.sendRedirect("index.html");
+            response.sendRedirect("index.jsp");
             return;
         }
 
