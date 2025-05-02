@@ -1,22 +1,27 @@
+import daos.ReserveDao;
 import daos.RoomDao;
 import daos.UserDao;
+import model.reserve.Reserve;
 import model.rooms.Room;
 import model.rooms.RoomConstruction;
 import model.users.Administrator;
 import model.users.Customer;
 import model.users.User;
 
+import java.time.LocalDate;
+import java.time.format.DateTimeFormatter;
 import java.util.Scanner;
 
 public class Main {
 
     public static void main(String[] args) {
-      System.out.println("Hello, world! Server would start here.");
+      //System.out.println("Hello, world! Server would start here.");
 
        //Testing CRUD for User
 
         UserDao userDao = new UserDao();
         RoomDao roomDao = new RoomDao();
+        ReserveDao reserveDao = new ReserveDao();
         Scanner sc = new Scanner(System.in);
         boolean exit = false;
 
@@ -34,6 +39,15 @@ public class Main {
             System.out.println("9. Get room by id");
             System.out.println("10. Eliminate room by id");
             System.out.println("11. Update room by id");
+
+            //testing reserveDao
+
+            System.out.println("12. Create new reserve");
+            System.out.println("13. List reserves");
+            System.out.println("14. Get reserve by id");
+            System.out.println("15. Update reserve");
+            System.out.println("16. Eliminate reserve");
+            System.out.println("17. get reserve by user id");
 
             System.out.print("Choose an option: ");
 
@@ -208,6 +222,132 @@ public class Main {
                     System.out.println("Room updated successfully.");
                     System.out.println("New room info: " + updatedRoom);
                     break;
+                case 12:
+                    System.out.println("insert reserve status ");
+                    String status = sc.nextLine();
+
+                    // prompt for dates
+                    System.out.println("insert CheckIn date (yyyy-MM-dd)");
+                    String checkInString = sc.nextLine();
+                    System.out.println("insert checkOut (yyyy-MM-dd)");
+                    String checkOutString = sc.nextLine();
+
+                    // convert dates string into Date format
+                    LocalDate checkIn = LocalDate.parse(checkInString, DateTimeFormatter.ofPattern("yyyy-MM-dd"));
+                    LocalDate checkOut = LocalDate.parse(checkOutString, DateTimeFormatter.ofPattern("yyyy-MM-dd"));
+
+                    // prompt for user id, this user must exist
+                    System.out.println("insert user Id to add to the reserve");
+                    Long userIdToAdd = Long.parseLong(sc.nextLine());
+                    User user = userDao.getUserById(userIdToAdd);
+
+                    // prompt for room id, this room must exist
+                    System.out.println("insert room Id to add to the reserve");
+                    Long roomIdToAdd = Long.parseLong(sc.nextLine());
+                    Room room4 = roomDao.getRoomById(roomIdToAdd);
+
+                    // create and save the reserve
+                    if (user != null && room4 != null) {
+                        Reserve reserve = new Reserve();
+                        reserve.setStatus(status);
+                        reserve.setCheckIn(checkIn);
+                        reserve.setCheckOut(checkOut);
+                        reserve.setUser(user);
+                        reserve.setRoom(room4);
+
+                        reserveDao.insertReserve(reserve);
+                        System.out.println("Reserve created successfully with ID: " + reserve.getId());
+                    } else {
+                        System.out.println("Error creating reserve. User or Room not found.");
+                    }
+                    break;
+                case 13:
+                    System.out.println("--------Reserve List-------");
+                    System.out.println(reserveDao.getAll());
+                    break;
+                case 14:
+                    System.out.println("please insert the reservation Id to check");
+                    Long reserveId = Long.parseLong(sc.nextLine());
+                    System.out.println(reserveDao.getReserveById(reserveId));
+                    break;
+                case 15:
+                    System.out.println("Please insert the reservation ID to update");
+                    Long reserveIdToUpdate = Long.parseLong(sc.nextLine());
+                    Reserve reserveUpdate = reserveDao.getReserveById(reserveIdToUpdate);
+
+                    // the reserve exist?
+                    if (reserveUpdate == null) {
+                        System.out.println("Reserve with ID = " + reserveIdToUpdate + " was not found");
+                    } else {
+                        // show current reserve info
+                        System.out.println("Current reserve info for ID = " + reserveIdToUpdate + " is: " + reserveUpdate);
+                        System.out.println("\n");
+
+                        // update status
+                        System.out.println("Insert new reserve status (Current = " + reserveUpdate.getStatus() + ")");
+                        String newStatus = sc.nextLine();
+                        reserveUpdate.setStatus(newStatus);
+
+                        // update check-in
+                        System.out.println("Insert new check-in date (Current = " + reserveUpdate.getCheckIn() + ")");
+                        String newCheckInString = sc.nextLine();
+
+                        // turn string input to LocalDate
+                        LocalDate newCheckIn = null;
+                        try {
+                            newCheckIn = LocalDate.parse(newCheckInString, DateTimeFormatter.ofPattern("yyyy-MM-dd"));
+                            reserveUpdate.setCheckIn(newCheckIn);
+                        } catch (Exception e) {
+                            System.out.println("Error parsing CheckIn date. Please enter a valid date in format yyyy-MM-dd");
+                            break;
+                        }
+
+                        // update check-out
+                        System.out.println("Insert new check-out date (Current = " + reserveUpdate.getCheckOut() + ")");
+                        String newCheckOutString = sc.nextLine();
+
+                        // turn string input into LocalDate
+                        LocalDate newCheckOut = null;
+                        try {
+                            newCheckOut = LocalDate.parse(newCheckOutString, DateTimeFormatter.ofPattern("yyyy-MM-dd"));
+                            reserveUpdate.setCheckOut(newCheckOut);
+                        } catch (Exception e) {
+                            System.out.println("Error parsing CheckOut date. Please enter a valid date in format yyyy-MM-dd");
+                            break;
+                        }
+
+                        // update with the new room
+                        System.out.println("Insert new room ID (Current = " + reserveUpdate.getRoom().getId() + ")");
+                        Long newRoomID = Long.parseLong(sc.nextLine());
+                        Room newRoom = roomDao.getRoomById(newRoomID);
+                        if (newRoom != null) {
+                            reserveUpdate.setRoom(newRoom);
+                        } else {
+                            System.out.println("Room with ID = " + newRoomID + " was not found");
+                            break;
+                        }
+
+                        // update the reserve
+                        reserveDao.updateReserve(reserveUpdate);
+                        System.out.println("Reserve updated successfully");
+                    }
+                    break;
+                case 16:
+                    System.out.println("insert reserve Id to Eliminate");
+                    Long reserveToEliminate = Long.parseLong(sc.nextLine());
+                    System.out.println("are you sure you want to eliminate reserve id" + reserveToEliminate + "? yes/no");
+                    String confirmation = sc.nextLine();
+                    if (confirmation.equalsIgnoreCase("yes")){
+                        reserveDao.deleteReserve(reserveToEliminate);
+                    } else {
+                        System.out.println("delete cancelled");
+                    }
+                    break;
+                case 17:
+                    System.out.println("insert the user Id to see his reserve");
+                    Long userid = Long.parseLong(sc.nextLine());
+                    System.out.println(reserveDao.findReserveByUserId(userid));
+                break;
                 case 0:
                     exit = true;
                     break;
