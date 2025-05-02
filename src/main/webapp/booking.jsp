@@ -2,29 +2,32 @@
 <%@ page import="java.util.*" %>
 <%@ page import="java.text.SimpleDateFormat" %>
 <%@ page import="daos.RoomDao" %>
-<%@ page import="daos.RoomTypeDao" %>
 <%@ page import="model.rooms.Room" %>
-<%@ page import="model.rooms.RoomType" %>
-
 <%
     // Maps to store room data
     Map<String, Integer> roomInventory = new HashMap<>();
     Map<String, Double> roomPrices = new HashMap<>();
+    Map<String, String> roomDescriptions = new HashMap<>();
 
     try {
-        // Get room types and their prices from database
-        RoomTypeDao roomTypeDao = new RoomTypeDao();
-        List<RoomType> roomTypes = roomTypeDao.getAllRoomTypes();
+        // Get room data from database
+        RoomDao roomDao = new RoomDao();
 
-        for (RoomType type : roomTypes) {
-            String typeName = type.getName();
-            double price = type.getPrice();
+        // Get room types and their prices
+        List<Room> roomTypes = roomDao.getAllRoomTypes();
+
+        // Get room descriptions
+        roomDescriptions = roomDao.getAllRoomDescriptions();
+
+        for (Room room : roomTypes) {
+            String typeName = room.getType();
+            double price = room.getPrice();
 
             // Store price in the map
             roomPrices.put(typeName, price);
 
             // Count available rooms of this type
-            int availableCount = roomTypeDao.countAvailableRoomsByType(typeName);
+            int availableCount = roomDao.countAvailableRoomsByType(typeName);
             roomInventory.put(typeName, availableCount);
         }
     } catch (Exception e) {
@@ -40,6 +43,10 @@
         roomPrices.put("Basic", 139.59);
         roomPrices.put("Premium", 219.59);
         roomPrices.put("Presidential", 499.59);
+
+        roomDescriptions.put("Basic", "Perfect for solo travelers or couples");
+        roomDescriptions.put("Premium", "Spacious room with premium amenities");
+        roomDescriptions.put("Presidential", "Luxury suite with exclusive features");
     }
 
     // Get today's date and format it for the date picker min attribute
@@ -117,6 +124,7 @@
                                min="<%= tomorrow %>" max="<%= maxDate %>" value="<%= tomorrow %>">
                     </div>
                 </div>
+
                 <div class="form-group">
                     <label>Select Room Type:</label>
                     <input type="hidden" id="roomType" name="roomType" value="">
@@ -125,22 +133,25 @@
                             <h3>Basic Room</h3>
                             <div class="room-price">$<%= roomPrices.get("Basic") %>/night</div>
                             <div class="room-availability"><%= roomInventory.get("Basic") %> rooms available</div>
-                            <p>Perfect for solo travelers or couples</p>
+                            <p><%= roomDescriptions.get("Basic") %></p>
                         </div>
+
                         <div class="room-option" data-room-type="Premium" onclick="selectRoom('Premium')">
                             <h3>Premium Room</h3>
                             <div class="room-price">$<%= roomPrices.get("Premium") %>/night</div>
                             <div class="room-availability"><%= roomInventory.get("Premium") %> rooms available</div>
-                            <p>Spacious room with premium amenities</p>
+                            <p><%= roomDescriptions.get("Premium") %></p>
                         </div>
+
                         <div class="room-option" data-room-type="Presidential" onclick="selectRoom('Presidential')">
                             <h3>Presidential Suite</h3>
                             <div class="room-price">$<%= roomPrices.get("Presidential") %>/night</div>
                             <div class="room-availability"><%= roomInventory.get("Presidential") %> rooms available</div>
-                            <p>Luxury suite with exclusive features</p>
+                            <p><%= roomDescriptions.get("Presidential") %></p>
                         </div>
                     </div>
                 </div>
+
                 <div class="booking-summary" id="bookingSummary">
                     <h3>Booking Summary</h3>
                     <p><strong>Check-in:</strong> <span id="summaryCheckIn"></span></p>
@@ -151,6 +162,7 @@
                         Total: $<span id="summaryTotal"></span>
                     </div>
                 </div>
+
                 <button type="submit" class="booking-btn">Proceed to Payment</button>
             </form>
         </div>

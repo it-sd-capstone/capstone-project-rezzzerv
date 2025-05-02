@@ -6,135 +6,220 @@ import model.rooms.RoomConstruction;
 
 import java.sql.*;
 import java.util.ArrayList;
+import java.util.HashMap;
 import java.util.List;
+import java.util.Map;
 
 public class RoomDao {
+    private Connection connection;
 
-    public void insertRoom(Room room) {
-        String sql = "INSERT INTO rooms (roomNumber, available, type, price) VALUES (?, ?, ?, ?)";
-
-        // get connection and keep it open
-        Connection conn = DbConnection.getConnection();
-
-        try (PreparedStatement pstmt = conn.prepareStatement(sql, Statement.RETURN_GENERATED_KEYS)) {
-            pstmt.setInt(1, room.getRoomNumber());
-            pstmt.setBoolean(2, room.isAvailable());
-            pstmt.setString(3, room.getType());
-            // added price parameter
-            pstmt.setDouble(4, room.getPrice());
-
-            pstmt.executeUpdate();
-
-            try (ResultSet rs = pstmt.getGeneratedKeys()) {
-                if (rs.next()) {
-                    room.setId(rs.getLong(1));
-                }
-            }
-            System.out.println("Room inserted: " + room.getRoomNumber() + " (ID= " + room.getId() + ")");
-
-        } catch (SQLException e) {
-            System.out.println("Error inserting room");
-            e.printStackTrace();
+    public RoomDao() {
+        try {
+            connection = DbConnection.getConnection();
+        } catch (Exception e) {
+            System.err.println("Error connecting to database: " + e.getMessage());
         }
     }
 
-    // List of rooms
+    // Method used in Main.java - renamed from createRoom to insertRoom
+    public boolean insertRoom(Room room) {
+        String query = "INSERT INTO rooms (roomNumber, available, type, price) VALUES (?, ?, ?, ?)";
+        try (PreparedStatement pstmt = connection.prepareStatement(query, Statement.RETURN_GENERATED_KEYS)) {
+            pstmt.setInt(1, room.getRoomNumber());
+            pstmt.setBoolean(2, room.isAvailable());
+            pstmt.setString(3, room.getType());
+            pstmt.setDouble(4, room.getPrice());
+
+            int affectedRows = pstmt.executeUpdate();
+
+            if (affectedRows > 0) {
+                try (ResultSet generatedKeys = pstmt.getGeneratedKeys()) {
+                    if (generatedKeys.next()) {
+                        room.setId(generatedKeys.getLong(1));
+                        return true;
+                    }
+                }
+            }
+            return false;
+        } catch (SQLException e) {
+            System.err.println("Error creating room: " + e.getMessage());
+            return false;
+        }
+    }
+
+    // Method used in Main.java - renamed from getAllRooms to getAll
     public List<Room> getAll() {
         List<Room> rooms = new ArrayList<>();
-        String sql = "SELECT * FROM rooms";
-        Connection conn = DbConnection.getConnection();
+        String query = "SELECT * FROM rooms";
 
-        try (Statement stmt = conn.createStatement();
-             ResultSet rs = stmt.executeQuery(sql)) {
+        try (Statement stmt = connection.createStatement();
+             ResultSet rs = stmt.executeQuery(query)) {
 
             while (rs.next()) {
-                //Calling the method to check room type
-                rooms.add(mapResultSetToRoom(rs));
+                Long id = rs.getLong("id");
+                String type = rs.getString("type");
+                int roomNumber = rs.getInt("roomNumber");
+                boolean available = rs.getBoolean("available");
+                double price = rs.getDouble("price");
+
+                Room room = RoomConstruction.createRoom(type, id, roomNumber, available, price);
+                rooms.add(room);
             }
         } catch (SQLException e) {
-            System.out.println("Error retrieving rooms");
-            e.printStackTrace();
+            System.err.println("Error getting all rooms: " + e.getMessage());
         }
 
         return rooms;
     }
 
-    // get room by id
+    // Get a room by ID - already exists but keeping for clarity
     public Room getRoomById(Long id) {
-        String sql = "SELECT * FROM rooms WHERE id = ?";
-        Connection conn = DbConnection.getConnection();
-
-        try (PreparedStatement pstmt = conn.prepareStatement(sql)) {
+        String query = "SELECT * FROM rooms WHERE id = ?";
+        try (PreparedStatement pstmt = connection.prepareStatement(query)) {
             pstmt.setLong(1, id);
-            try (ResultSet rs = pstmt.executeQuery()) {
 
+            try (ResultSet rs = pstmt.executeQuery()) {
                 if (rs.next()) {
-                    // the resultset now handles the price too
-                    return mapResultSetToRoom(rs);
+                    String type = rs.getString("type");
+                    int roomNumber = rs.getInt("roomNumber");
+                    boolean available = rs.getBoolean("available");
+                    double price = rs.getDouble("price");
+
+                    return RoomConstruction.createRoom(type, id, roomNumber, available, price);
                 }
             }
         } catch (SQLException e) {
-            System.out.println("Error retrieving room by ID");
-            e.printStackTrace();
+            System.err.println("Error getting room by ID: " + e.getMessage());
         }
-
         return null;
     }
 
-    // update room data
-    public void updateRoom(Room room) {
-        String sql = "UPDATE rooms SET roomNumber = ?, available = ?, type = ?, price = ? WHERE id = ?";
-        Connection conn = DbConnection.getConnection();
-        try (PreparedStatement pstmt = conn.prepareStatement(sql)) {
+    // Method used in Main.java - renamed from updateRoom to match
+    public boolean updateRoom(Room room) {
+        String query = "UPDATE rooms SET roomNumber = ?, available = ?, type = ?, price = ? WHERE id = ?";
+        try (PreparedStatement pstmt = connection.prepareStatement(query)) {
             pstmt.setInt(1, room.getRoomNumber());
             pstmt.setBoolean(2, room.isAvailable());
             pstmt.setString(3, room.getType());
-            // added price parameter
             pstmt.setDouble(4, room.getPrice());
             pstmt.setLong(5, room.getId());
 
-            int rowsAffected = pstmt.executeUpdate();
-            if (rowsAffected > 0) {
-                System.out.println("Room updated: " + room.getRoomNumber());
-            } else {
-                System.out.println("No room found with ID " + room.getId());
-            }
+            int affectedRows = pstmt.executeUpdate();
+            return affectedRows > 0;
         } catch (SQLException e) {
-            System.out.println("Error updating room");
-            e.printStackTrace();
+            System.err.println("Error updating room: " + e.getMessage());
+            return false;
         }
     }
 
-
-    // delete room by id
-    public void deleteRoom(Long id) {
-        String sql = "DELETE FROM rooms WHERE id = ?";
-        Connection conn = DbConnection.getConnection();
-        try (PreparedStatement pstmt = conn.prepareStatement(sql)) {
+    // Method used in Main.java - already exists but keeping for clarity
+    public boolean deleteRoom(Long id) {
+        String query = "DELETE FROM rooms WHERE id = ?";
+        try (PreparedStatement pstmt = connection.prepareStatement(query)) {
             pstmt.setLong(1, id);
-            int rowsAffected = pstmt.executeUpdate();
-            if (rowsAffected > 0) {
-                System.out.println("Room deleted with ID: " + id);
-            } else {
-                System.out.println("No room found with ID: " + id);
-            }
+
+            int affectedRows = pstmt.executeUpdate();
+            return affectedRows > 0;
         } catch (SQLException e) {
-            System.out.println("Error deleting room");
-            e.printStackTrace();
+            System.err.println("Error deleting room: " + e.getMessage());
+            return false;
         }
     }
 
-    //method to reuse the logic for room type lookup
-    private Room mapResultSetToRoom(ResultSet rs) throws SQLException {
+    // Get all room types (distinct)
+    public List<Room> getAllRoomTypes() {
+        List<Room> roomTypes = new ArrayList<>();
+        String query = "SELECT DISTINCT type, price FROM rooms GROUP BY type, price";
 
-        Long id = rs.getLong("id");
-        int roomNumber = rs.getInt("roomNumber");
-        boolean available = rs.getBoolean("available");
-        String type = rs.getString("type");
-        // added retrieving price from result set
-        double price = rs.getDouble("price");
+        try (Statement stmt = connection.createStatement();
+             ResultSet rs = stmt.executeQuery(query)) {
 
-        // rebuild the room base in the type
-        return RoomConstruction.createRoom(type, id, roomNumber, available, price);
+            while (rs.next()) {
+                String type = rs.getString("type");
+                double price = rs.getDouble("price");
+
+                // Create a room with default values for id, roomNumber, and available
+                Room room = RoomConstruction.createRoom(type, 0L, 0, true, price);
+                roomTypes.add(room);
+            }
+        } catch (SQLException e) {
+            System.err.println("Error getting room types: " + e.getMessage());
+        }
+
+        return roomTypes;
+    }
+
+    // Count available rooms by type
+    public int countAvailableRoomsByType(String type) {
+        String query = "SELECT COUNT(*) FROM rooms WHERE type = ? AND available = true";
+        try (PreparedStatement pstmt = connection.prepareStatement(query)) {
+            pstmt.setString(1, type);
+
+            try (ResultSet rs = pstmt.executeQuery()) {
+                if (rs.next()) {
+                    return rs.getInt(1);
+                }
+            }
+        } catch (SQLException e) {
+            System.err.println("Error counting available rooms by type: " + e.getMessage());
+        }
+        return 0;
+    }
+
+    // Method to get room description by type
+    public String getRoomDescription(String roomType) {
+        switch (roomType) {
+            case "Basic":
+                return "Standard room with basic amenities, perfect for solo travelers or couples";
+            case "Premium":
+                return "Spacious room with premium amenities, ideal for extended stays";
+            case "Presidential":
+                return "Luxurious suite with all amenities, offering the ultimate comfort and elegance";
+            default:
+                return "Room with standard amenities";
+        }
+    }
+
+    // Method to get room capacity by type
+    public int getRoomCapacity(String roomType) {
+        switch (roomType) {
+            case "Basic":
+                return 2;
+            case "Premium":
+                return 3;
+            case "Presidential":
+                return 4;
+            default:
+                return 2;
+        }
+    }
+
+    // Method to get all room descriptions
+    public Map<String, String> getAllRoomDescriptions() {
+        Map<String, String> descriptions = new HashMap<>();
+        descriptions.put("Basic", getRoomDescription("Basic"));
+        descriptions.put("Premium", getRoomDescription("Premium"));
+        descriptions.put("Presidential", getRoomDescription("Presidential"));
+        return descriptions;
+    }
+
+    // Method to get all room capacities
+    public Map<String, Integer> getAllRoomCapacities() {
+        Map<String, Integer> capacities = new HashMap<>();
+        capacities.put("Basic", getRoomCapacity("Basic"));
+        capacities.put("Premium", getRoomCapacity("Premium"));
+        capacities.put("Presidential", getRoomCapacity("Presidential"));
+        return capacities;
+    }
+
+    // Close the database connection
+    public void close() {
+        try {
+            if (connection != null && !connection.isClosed()) {
+                connection.close();
+            }
+        } catch (SQLException e) {
+            System.err.println("Error closing database connection: " + e.getMessage());
+        }
     }
 }
