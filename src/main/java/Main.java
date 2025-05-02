@@ -1,6 +1,8 @@
+import daos.PaymentDao;
 import daos.ReserveDao;
 import daos.RoomDao;
 import daos.UserDao;
+import model.payment.Payment;
 import model.reserve.Reserve;
 import model.rooms.Room;
 import model.rooms.RoomConstruction;
@@ -21,6 +23,7 @@ public class Main {
 
         UserDao userDao = new UserDao();
         RoomDao roomDao = new RoomDao();
+        PaymentDao paymentDao = new PaymentDao();
         ReserveDao reserveDao = new ReserveDao();
         Scanner sc = new Scanner(System.in);
         boolean exit = false;
@@ -48,6 +51,13 @@ public class Main {
             System.out.println("15. Update reserve");
             System.out.println("16. Eliminate reserve");
             System.out.println("17. get reserve by user id");
+
+            //testing PaymentDao
+            System.out.println("18. Create new payment");
+            System.out.println("19. List payments");
+            System.out.println("20. Get payment by id");
+            System.out.println("21. Update payment");
+            System.out.println("22. Eliminate Payment");
 
             System.out.print("Choose an option: ");
 
@@ -348,6 +358,68 @@ public class Main {
                     Long userid = Long.parseLong(sc.nextLine());
                     System.out.println(reserveDao.findReserveByUserId(userid));
                 break;
+                case 18:
+                    System.out.println("insert card number");
+                    String cardNumber = sc.nextLine();
+                    System.out.println("insert amount to pay");
+                    double amount = sc.nextDouble();
+                    sc.nextLine();
+                    System.out.println("insert payment date. example 2025-05-19");
+                    LocalDate payDate = LocalDate.parse(sc.nextLine());
+                    System.out.println("insert reserve ID");
+                    Long reserveId1 = Long.parseLong(sc.nextLine());
+                    Reserve reservetoLook = reserveDao.getReserveById(reserveId1);
+                    Payment payment = new Payment();
+                    payment.setCardNumber(cardNumber);
+                    payment.setAmount(amount);
+                    payment.setPaidDate(payDate);
+                    payment.setReserve(reservetoLook);
+
+                    paymentDao.insertPayment(payment);
+
+                    System.out.println("payment " + payment + " Created successfully");
+                    break;
+                case 19:
+                    System.out.println("--------list of payments-------");
+                    System.out.println(paymentDao.getAllPayments());
+                    break;
+                case 20:
+                    System.out.println("looking payment by Id");
+                    System.out.println("insert payment Id to look for");
+                    Long payId = Long.parseLong(sc.nextLine());
+                    Payment payment1 = paymentDao.getPaymentById(payId);
+                    System.out.println("---- the payment ID= " + payId + " is....");
+                    System.out.println(payment1);
+                    break;
+                case 21:
+                    System.out.println("enter payment Id to update");
+                    Long payToUpdate = Long.parseLong(sc.nextLine());
+                    Payment payment2 = paymentDao.getPaymentById(payToUpdate);
+                    System.out.println("current info for payment Id = " + payment2);
+                    payment2.setId(payToUpdate);
+                    System.out.println("enter new Card-Number");
+                    String cardnumber = sc.nextLine();
+                    payment2.setCardNumber(cardnumber);
+                    System.out.println("enter new Amount");
+                    double amountTopay = sc.nextDouble();
+                    sc.nextLine();
+                    payment2.setAmount(amountTopay);
+                    System.out.println("Paid date inserted");
+                    payment2.setPaidDate(LocalDate.parse("2025-04-22"));
+                    System.out.println("Paid date inserted");
+                    System.out.println("insert new reserve Id");
+                    Long reserveid1 = Long.parseLong(sc.nextLine());
+                    Reserve reserveidtoupdate = reserveDao.getReserveById(reserveid1);
+                    payment2.setReserve(reserveidtoupdate);
+
+                    paymentDao.updatePayment(payment2);
+                    System.out.println(payment2);
+                    break;
+                case 22:
+                    System.out.println("insert id to eliminate payment");
+                    Long payIdToEliminate = Long.parseLong(sc.nextLine());
+                    paymentDao.deletePayment(payIdToEliminate);
+                    break;
                 case 0:
                     exit = true;
                     break;

@@ -16,6 +16,23 @@ public class UserService {
         userDao.insertUser(user);
     }
 
+
+    // method to login
+    public User userLogin(String email, String password){
+        User user = userDao.findByEmail(email);
+
+        if (user == null){
+            throw new RuntimeException("wrong user email, try again" + email);
+        }
+
+        if (!user.getPassword().equals(password)){
+            throw new RuntimeException("Worng password. try again");
+        }
+
+        return user;
+
+    }
+
     // we can add another methods here for...
     // login
     // update profile

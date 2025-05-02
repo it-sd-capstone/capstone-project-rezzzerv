@@ -1,4 +1,4 @@
-package servlets;
+package controller;
 
 import service.ReservationService;
 import model.rooms.Room;

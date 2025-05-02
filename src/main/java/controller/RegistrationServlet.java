@@ -1,3 +1,5 @@
+package controller;
+
 import model.users.Customer;
 import service.UserService;
 import jakarta.servlet.http.HttpServlet;
