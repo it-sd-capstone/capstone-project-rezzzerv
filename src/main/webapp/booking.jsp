@@ -12,6 +12,13 @@
     }
 %>
 
+<!-- show user session -->
+<p>show: User object = <%= user %></p>
+
+<!-- show user data -->
+<p>show: User email  = <%= user.getEmail() %></p>
+<p>show: User name   = <%= user.getName() %> <%= user.getLastName() %></p>
+
 <%
     // Maps to store room data
     Map<String, Integer> roomInventory = new HashMap<>();

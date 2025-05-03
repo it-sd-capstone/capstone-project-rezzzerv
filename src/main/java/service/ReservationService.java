@@ -43,7 +43,7 @@ public class ReservationService {
 
         // Create reserve object
         Reserve reserve = new Reserve();
-        reserve.setStatus("Confirmed");
+        reserve.setStatus("Pending");
         reserve.setCheckIn(checkIn);
         reserve.setCheckOut(checkOut);
         reserve.setUser(user);

@@ -9,6 +9,14 @@
         return;
     }
 %>
+
+<!-- show user session -->
+<p>show: User object = <%= user1 %></p>
+
+<!-- show user data -->
+<p>show: User email  = <%= user1.getEmail() %></p>
+<p>show: User name   = <%= user1.getName() %> <%= user1.getLastName() %></p>
+
 <%
     // Check if this is a test view
     boolean isTest = "true".equals(request.getParameter("test"));

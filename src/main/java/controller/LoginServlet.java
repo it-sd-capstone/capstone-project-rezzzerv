@@ -33,6 +33,7 @@ public class LoginServlet extends HttpServlet{
             //save user in session
             HttpSession session = request.getSession();
             session.setAttribute("user", user);
+            session.setAttribute("userId", user.getId());
 
             response.sendRedirect("index.jsp");
         } catch (RuntimeException e) {

@@ -37,6 +37,9 @@ public class ReserveServlet extends HttpServlet {
         HttpSession session = request.getSession();
         Long userId = (Long) session.getAttribute("userId");
 
+        // checking to see if session in working with the user id
+        System.out.println("debug: incoming session userId = " + session.getAttribute("userId"));
+
         // Check if user is logged in
         if (userId == null) {
             // Redirect to login page if not logged in
@@ -50,7 +53,7 @@ public class ReserveServlet extends HttpServlet {
             // Get form parameters
             String checkInStr = request.getParameter("checkIn");
             String checkOutStr = request.getParameter("checkOut");
-            int guests = Integer.parseInt(request.getParameter("guests"));
+            //int guests = Integer.parseInt(request.getParameter("guests"));
             String roomType = request.getParameter("roomType");
 
             // Parse dates
