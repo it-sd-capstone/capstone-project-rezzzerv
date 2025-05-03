@@ -37,9 +37,9 @@
                         <label for="roomType">Room Type:</label>
                         <select id="roomType" name="roomType" required>
                             <option value="" disabled selected>Choose a type…</option>
-                            <option value="Type placeholder">Type placeholder</option>
-                            <option value="Type placeholder">Type placeholder</option>
-                            <option value="Type placeholder">Type placeholder</option>
+                            <option value="Type placeholder">Presidential</option>
+                            <option value="Type placeholder">Basic</option>
+                            <option value="Type placeholder">Premium</option>
                         </select>
                     </div>
                     <div class="formGroup">
