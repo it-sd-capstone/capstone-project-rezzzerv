@@ -59,6 +59,10 @@ public class Main {
             System.out.println("21. Update payment");
             System.out.println("22. Eliminate Payment");
 
+
+            System.out.println("23. show all room type");
+            System.out.println("24. count  available room by type");
+
             System.out.print("Choose an option: ");
 
             int option = sc.nextInt();
@@ -420,6 +424,14 @@ public class Main {
                     Long payIdToEliminate = Long.parseLong(sc.nextLine());
                     paymentDao.deletePayment(payIdToEliminate);
                     break;
+                case 23:
+                    System.out.println("All room by type");
+                    System.out.println(roomDao.getAllRoomTypes());
+                    break;
+                case 24:
+                    String type = "Premium";
+                    int count = roomDao.countAvailableRoomsByType(type);
+                    System.out.println("room avalilable for type '" + type + "': " + count);
                 case 0:
                     exit = true;
                     break;

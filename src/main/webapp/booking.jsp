@@ -3,6 +3,15 @@
 <%@ page import="java.text.SimpleDateFormat" %>
 <%@ page import="daos.RoomDao" %>
 <%@ page import="model.rooms.Room" %>
+<%@ page import="model.users.User" %>
+<%
+    User user = (User) session.getAttribute("user");
+    if (user == null) {
+        response.sendRedirect("login.jsp");
+        return;
+    }
+%>
+
 <%
     // Maps to store room data
     Map<String, Integer> roomInventory = new HashMap<>();

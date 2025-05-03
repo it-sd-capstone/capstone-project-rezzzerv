@@ -1,6 +1,14 @@
 <%@ page language="java" contentType="text/html; charset=UTF-8" pageEncoding="UTF-8"%>
 <%@ page import="java.time.format.DateTimeFormatter" %>
 <%@ page import="java.time.temporal.TemporalAccessor" %>
+<%@ page import="model.users.User" %>
+<%
+    User user1 = (User) session.getAttribute("user");
+    if (user1 == null) {
+        response.sendRedirect("login.jsp");
+        return;
+    }
+%>
 <%
     // Check if this is a test view
     boolean isTest = "true".equals(request.getParameter("test"));
@@ -15,6 +23,8 @@
     String guestName = null;
     String guestEmail = null;
     Long reservationId = null;
+
+
 
     // If test mode, create dummy data
     if (isTest) {
