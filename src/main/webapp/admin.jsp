@@ -40,14 +40,9 @@
                         <label for="roomType">Room Type:</label>
                         <select id="roomType" name="roomType" required>
                             <option value="" disabled selected>Choose a type…</option>
-<<<<<<< Updated upstream
-                            <option value="Type placeholder">Presidential</option>
-                            <option value="Type placeholder">Basic</option>
-                            <option value="Type placeholder">Premium</option>
-=======
+                            <option value="Presidential">Presidential</option>
                             <option value="Basic">Basic</option>
                             <option value="Premium">Premium</option>
-                            <option value="Presidential">Presidential</option>
                         </select>
                     </div>
                     <div class="formGroup">
@@ -56,7 +51,6 @@
                             <option value="" disabled selected>Choose…</option>
                             <option value="1">Yes</option>
                             <option value="0">No</option>
->>>>>>> Stashed changes
                         </select>
                     </div>
                     <div class="formGroup">
