@@ -10,7 +10,7 @@ document.addEventListener('DOMContentLoaded', () => {
         const nav = document.querySelector('.nav-main');
         const li = document.createElement('li');
         const adminLink = document.createElement('a');
-        adminLink.href = 'admin.jsp';
+        adminLink.href = 'admin';
         adminLink.textContent = 'Admin Dashboard';
         li.appendChild(adminLink)
         nav.appendChild(li);

@@ -196,5 +196,6 @@
      data-presidential-price="<%= roomPrices.get("Presidential") %>"></div>
 
 <script src="js/booking.js"></script>
+<script src="js/main.js"></script>
 </body>
 </html>

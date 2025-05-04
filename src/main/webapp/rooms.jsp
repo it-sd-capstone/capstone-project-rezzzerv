@@ -188,6 +188,6 @@
         mainImage.src = thumbnail.src;
     }
 </script>
-
+<script src="js/main.js"></script>
 </body>
 </html>
