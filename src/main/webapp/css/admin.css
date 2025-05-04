@@ -1,26 +1,41 @@
 :root {
-    --adminPrimary: #5e3a9d;
-    --adminAccent:  #9575cd;
-    --adminDanger:  #d500f9;
-    --adminLight:   #ffffff;
-    --adminText:    #4a148c;
-    --adminBorder:  #d1c4e9;
+
+    --colorPrimary:       #8860d0;
+    --colorPrimaryHover:  #7a51c0;
+    --colorSecondary:     #5e3a9d;
+    --colorBgLight:       #f5f0ff;
+    --colorText:          #333333;
+    --colorWhite:         #ffffff;
+
+    --shadowPurpleLight:  rgba(136,96,208,0.15);
+    --shadowPurple:       rgba(136,96,208,0.2);
+    --shadowPurpleMd:     rgba(136,96,208,0.3);
+    --shadowPurpleAlt:    rgba(136,96,208,0.25);
 }
 
+
 .adminContainer {
+    display: block;
+    transform: translateY(0);
+    transition: transform 0.2s ease-out, box-shadow 0.2s ease-out;
     max-width: 900px;
     margin: 2rem auto;
     padding: 1.5rem;
-    background: var(--adminLight);
+    background: var(--colorWhite);
     border-radius: 8px;
-    box-shadow: 0 2px 8px rgba(0,0,0,0.1);
-    font-family: 'Arial',  sans-serif;
-    color: var(--adminText);
+    box-shadow: 0 2px 8px var(--shadowPurpleLight);
+    font-family: 'Arial', sans-serif;
+    color: var(--colorText);
+}
+
+.adminContainer:hover {
+    transform: translateY(-4px);
+    box-shadow: 0 8px 16px var(--shadowPurple);
 }
 
 h1 {
     text-align: center;
-    color: var(--adminPrimary);
+    color: var(--colorPrimary);
     margin: 1.5rem 0;
 }
 
@@ -34,11 +49,10 @@ h1 {
     font-weight: 600;
 }
 
-
 .formControl {
     width: 100%;
     padding: 0.6rem;
-    border: 1px solid var(--adminBorder);
+    border: 1px solid var(--colorText);
     border-radius: 4px;
     font-size: 1rem;
     transition: box-shadow 0.2s, border-color 0.2s;
@@ -46,31 +60,85 @@ h1 {
 
 .formControl:focus {
     outline: none;
-    border-color: var(--adminAccent);
+    border-color: var(--colorPrimaryHover);
     box-shadow: 0 0 0 3px rgba(24,188,156,0.3);
 }
 
+#formTitle {
+    font-size: 1.75rem;
+    color: var(--colorPrimary);
+    margin-bottom: 1.5rem;
+}
+
+#roomFormContainer form {
+    display: grid;
+    grid-template-columns: 140px 1fr;
+    grid-column-gap: 1.5rem;
+    grid-row-gap: 1rem;
+    align-items: center;
+}
+
+#roomFormContainer label {
+    font-size: 1.1rem;
+    font-weight: 600;
+    justify-self: end;
+}
+
+#roomFormContainer input,
+#roomFormContainer select {
+    font-size: 1rem;
+    padding: 0.75rem;
+    width: 100%;
+    border: 1px solid var(--colorText);
+    border-radius: 4px;
+}
+
+#roomFormContainer .formGroup {
+    grid-column: 1 / -1;
+    margin-bottom: 1rem;
+}
+
+#roomFormContainer .formGroup:last-child {
+    display: flex;
+    gap: 0.5rem;
+    justify-content: flex-end;
+    grid-column: 2 / -1;
+    margin-top: 0.5rem;
+}
+
+#roomFormContainer {
+    display: none;
+}
+
+#roomFormContainer.visible {
+    display: block;
+}
+
 .btnPrimaryAdmin {
-    background: var(--adminPrimary);
-    color: #fff;
+    background: var(--colorPrimary);
+    color: var(--colorWhite);
     padding: 0.6rem 1.2rem;
     border: none;
     border-radius: 4px;
     cursor: pointer;
     font-size: 1rem;
     margin-right: 0.5rem;
-    transition: background 0.2s;
+    transition: background 0.2s, transform 0.1s ease-out, box-shadow 0.1s ease-out;
+    transform: translateY(0);
+    box-shadow: 0 2px 4px rgba(0, 0, 0, 0.1);
 }
 
 .btnPrimaryAdmin:hover {
-    background: #1b2838;
+    background: var(--colorPrimaryHover);
+    transform: translateY(-2px);
+    box-shadow: 0 4px 8px rgba(0, 0, 0, 0.15);
 }
 
 .btnSecondaryAdmin {
-    background: #fff;
-    color: var(--adminPrimary);
+    background: var(--colorWhite);
+    color: var(--colorPrimary);
     padding: 0.6rem 1.2rem;
-    border: 1px solid var(--adminPrimary);
+    border: 1px solid var(--colorPrimary);
     border-radius: 4px;
     cursor: pointer;
     font-size: 1rem;
@@ -78,8 +146,10 @@ h1 {
 }
 
 .btnSecondaryAdmin:hover {
-    background: var(--adminPrimary);
-    color: #fff;
+    background: var(--colorPrimary);
+    color: var(--colorWhite);
+    transform: translateY(-2px);
+    box-shadow: 0 4px 8px rgba(0, 0, 0, 0.15);
 }
 
 .tableAdmin {
@@ -92,22 +162,22 @@ h1 {
 .tableAdmin td {
     padding: 0.75rem;
     text-align: left;
-    border-bottom: 1px solid var(--adminBorder);
+    border-bottom: 1px solid var(--colorText);
 }
 
 .tableAdmin th {
-    background: var(--adminPrimary);
-    color: #fff;
+    background: var(--colorPrimary);
+    color: var(--colorWhite);
 }
 
 .tableAdmin tr:nth-child(even) {
-    background: #f9f9f9;
+    background: var(--colorBgLight);
 }
 
 #addRoomBtn {
     display: block;
-    background: var(--adminPrimary);
-    color: #fff;
+    background: var(--colorPrimary);
+    color: var(--colorWhite);
     padding: 0.6rem 1.2rem;
     border: none;
     border-radius: 4px;
@@ -119,13 +189,173 @@ h1 {
 }
 
 #addRoomBtn:hover:not(:disabled) {
-    background: var(--adminAccent);
+    background: var(--colorPrimaryHover);
 }
 
 #addRoomBtn:disabled {
-    background: var(--adminAccent);
+    background: var(--colorPrimaryHover);
     opacity: 0.7;
     cursor: not-allowed;
+}
+
+.modalOverlay {
+    position: fixed;
+    inset: 0;
+    background: rgba(0,0,0,0.5);
+    z-index: 1000;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+}
+
+.modal {
+    background: var(--colorWhite);
+    padding: 1.5rem;
+    border-radius: 0.5rem;
+    box-shadow: 0 4px 15px var(--shadowPurpleMd);
+    z-index: 1001;
+    max-width: 90%;
+    width: 400px;
+    position: relative;
+    max-height: 90vh;
+    overflow-y: auto;
+}
+
+#roomsListSection h2 {
+    font-size: 1.75rem;
+    color: var(--colorPrimary);
+    margin: 1.5rem 0 1rem;
+    border-bottom: 2px solid var(--colorPrimary);
+    padding-bottom: 0.5rem;
+}
+
+#editModal {
+    background: var(--colorWhite);
+    padding: 1.5rem;
+    border-radius: 0.5rem;
+    box-shadow: 0 4px 15px var(--shadowPurpleMd);
+    max-width: 90%;
+    width: 400px;
+    max-height: 90vh;
+    overflow-y: auto;
+}
+
+#editModal h2 {
+    font-size: 1.75rem;
+    color: var(--colorPrimary);
+    margin-bottom: 1.25rem;
+}
+
+#editModal form {
+    display: grid;
+    grid-template-columns: 140px 1fr;
+    grid-row-gap: 1rem;
+    grid-column-gap: 1.5rem;
+    align-items: center;
+}
+
+#editModal label {
+    font-size: 1.1rem;
+    font-weight: 600;
+    justify-self: end;
+}
+
+#editModal input,
+#editModal select {
+    font-size: 1rem;
+    padding: 0.75rem;
+    width: 100%;
+    border: 1px solid #ccc;
+    border-radius: 4px;
+}
+
+#editModal .formGroup {
+    grid-column: 1 / -1;
+    margin-bottom: 1rem;
+}
+
+#editModal .formGroup:last-child {
+    display: flex;
+    gap: 0.5rem;
+    justify-content: start;
+    grid-column: 2 / -1;
+    margin-top: 0.5rem;
+}
+
+#deleteModal .formGroup {
+    display: flex;
+    gap: 0.5rem;
+    justify-content: flex-end;
+    margin-top: 1.5rem;
+}
+
+#deleteModal h2 {
+    font-size: 1.5rem;
+    color: var(--colorPrimary);
+    margin-bottom: 0.75rem;
+}
+
+#deleteModal p {
+    margin: 1rem 0 1.5rem;
+    line-height: 1.4;
+}
+
+#deleteModal p strong {
+    margin: 0 0.25rem;
+    font-weight: 600;
+    color: var(--colorPrimary);
+}
+
+#deleteModal .btnPrimaryAdmin {
+    margin-right: 0.5rem;
+}
+
+.modal .formGroup {
+    margin-bottom: 1rem;
+}
+
+#roomsListSection {
+    position: relative;
+}
+
+#flashContainer {
+    position: absolute;
+    top: -30px;
+    left: 50%;
+    transform: translateX(-50%);
+    z-index: 10;
+    width: auto;
+    padding: 0.75rem 2rem 0.75rem 1rem;
+}
+
+.flash-message {
+    background-color: #e0f8e9;
+    border: 1px solid #2f7c51;
+    color: #155724;
+    border-radius: 4px;
+    padding: 0.75rem 1rem;
+    margin: 0.5rem auto 0;
+    max-width: 480px;
+    position: relative;
+    text-align: center;
+    font-weight: bold;
+}
+
+.flash-close {
+    position: absolute;
+    top: -0.1rem;
+    right: .2rem;
+    background: none;
+    border: none;
+    font-size: 1.2rem;
+    line-height: 1;
+    cursor: pointer;
+    color: #155724;
+}
+
+
+.flash-message.success {
+
 }
 
 .invalidPulse {
