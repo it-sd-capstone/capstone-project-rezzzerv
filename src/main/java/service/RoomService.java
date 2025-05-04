@@ -2,6 +2,7 @@ package service;
 
 import daos.RoomDao;
 import model.rooms.Room;
+import java.sql.SQLException;
 import model.rooms.RoomConstruction;
 import java.util.List;
 
@@ -29,4 +30,21 @@ public class RoomService {
             throw new RuntimeException(e);
         }
     }
+
+
+  public List<Room> getAllRooms() throws SQLException {
+    return roomDao.getAll();
+  }
+
+  public void createRoom(Room room) throws SQLException {
+    roomDao.insertRoom(room);
+  }
+
+  public void updateRoom(Room room) throws SQLException {
+    roomDao.updateRoom(room);
+  }
+
+  public void deleteRoom(long id) throws SQLException {
+    roomDao.deleteRoom(id);
+  }
 }
