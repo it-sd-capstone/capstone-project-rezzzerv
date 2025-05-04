@@ -75,8 +75,4 @@ document.addEventListener('DOMContentLoaded', () => {
     initMoneyField(roomPriceField);
     initDigitsOnly(editRoomNumber);
     initMoneyField(editRoomPrice);
-
-    // (Optionally: your form-submit validation logic can go here)
-    // e.g. adminForm.addEventListener('submit', …);
-    //      editForm.addEventListener('submit', …);
 });
