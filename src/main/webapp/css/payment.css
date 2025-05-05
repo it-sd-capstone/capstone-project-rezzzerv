@@ -1,71 +1,153 @@
 :root {
-    /* Pay button */
-    --paymentPrimary:      #9575cd;
-    --paymentPrimaryLight: #d1c4e9;
-    --paymentPrimaryDark:  #7e57c2;
 
-    /* Disabled state */
-    --paymentText:        #4a148c;
-    --paymentDisabled:    #ccc;
-
-    /* Cancel button */
-    --paymentSecondary:       #fff;
-    --paymentSecondaryBorder: #9575cd;
+    --paymentPrimary:        #9575cd;
+    --paymentPrimaryLight:   #d1c4e9;
+    --paymentPrimaryDark:    #7e57c2;
+    --colorWhite:         #ffffff;
+    --colorPrimary:       #8860d0;
+    --colorPrimaryHover:  #7a51c0;
+    --colorSecondary:     #5e3a9d;
+    --colorBgLight:       #f5f0ff;
+    --colorText:          #333333;
+    --paymentSecondary:         #ffffff;
+    --paymentSecondaryBorder:   #9575cd;
+    --paymentDisabledText:    #4a148c;
+    --paymentDisabledBg:      #ccc;
+    --shadowPurple:       rgba(136, 96, 208, 0.2);
 }
 
-.paymentForm h2 {
-    margin-bottom: 2rem;
+.payment-container {
+    display: grid;
+    grid-template-columns: 1fr 1fr;
+    gap: 2rem;
+    max-width: 1000px;
+    margin: 2rem auto;
+    padding: 0 1rem;
 }
 
-.formGroup {
+.payment-summary,
+.payment-form {
+    background: var(--colorWhite);
+    border-radius: 8px;
+    box-shadow: 0 2px 8px var(--shadowPurple);
+    padding: 1.5rem;
+    transition: transform 0.2s ease-out, box-shadow 0.2s ease-out;
+}
+
+.payment-summary:hover,
+.payment-form:hover {
+    transform: translateY(-4px);
+    box-shadow: 0 8px 16px var(--shadowPurple);
+}
+
+.payment-summary h2,
+.payment-form h2 {
+    font-size: 1.75rem;
+    color: var(--colorPrimary);
     margin-bottom: 1.5rem;
 }
 
-.orderSummary ul {
-    list-style: none;
-    padding-left: 0;
-    margin: 0;
-}
-
-.orderSummary ul li {
+.reservation-details p {
     display: flex;
     justify-content: space-between;
-    margin-bottom: 0.5rem;
+    margin-bottom: 0.75rem;
+    font-size: 1rem;
 }
 
-.orderSummary ul li span:first-child {
+.reservation-details p strong {
     font-weight: 600;
-    font-size: 1.05rem;
+    color: var(--colorText);
 }
 
-.orderSummary {
-    margin-bottom: 2rem;
+.price-summary p {
+    display: flex;
+    justify-content: space-between;
+    margin-bottom: 0.75rem;
+    font-size: 1rem;
 }
 
-.btnPay {
+.price-summary p span {
+    display: inline-block;
+}
+
+.price-summary p.total {
+    font-size: 1.2rem;
+    font-weight: 700;
+    margin-top: 1rem;
+}
+
+.payment-form form {
+    display: grid;
+    grid-template-columns: 1fr;
+    gap: 1.25rem;
+}
+
+.payment-form .form-group {
+    display: flex;
+    flex-direction: column;
+}
+
+.payment-form label {
+    font-weight: 600;
+    margin-bottom: 0.5rem;
+    color: var(--colorText);
+}
+
+.payment-form input,
+.payment-form select {
+    padding: 0.75rem;
+    font-size: 1rem;
+    border: 1px solid var(--colorText);
+    border-radius: 4px;
+    transition: border-color 0.2s, box-shadow 0.2s;
+}
+
+.payment-form input:focus,
+.payment-form select:focus {
+    outline: none;
+    border-color: var(--colorPrimaryHover);
+    box-shadow: 0 0 0 3px rgba(136,96,208,0.2);
+}
+
+.payment-form .form-row {
+    display: grid;
+    grid-template-columns: repeat(auto-fit, minmax(200px, 1fr));
+    gap: 1rem;
+}
+
+.form-actions {
+    display: flex;
+    gap: 1rem;
+    justify-content: flex-end;
+    margin-top: 1.5rem;
+}
+
+.btn-primary {
     background: var(--paymentPrimary);
-    color: #fff;
+    color: var(--colorWhite);
     padding: 0.75rem 1.5rem;
     border: none;
     border-radius: 4px;
     font-size: 1rem;
     font-weight: 600;
     cursor: pointer;
-    transition: background 0.2s, opacity 0.2s;
+    transition: background 0.2s, transform 0.1s ease-out, box-shadow 0.1s ease-out;
 }
 
-.btnPay:hover:not(:disabled) {
+.btn-primary:hover:not(:disabled) {
     background: var(--paymentPrimaryDark);
+    transform: translateY(-2px);
+    box-shadow: 0 4px 8px rgba(0,0,0,0.15);
 }
 
-.btnPay:disabled {
+.btn-primary:disabled {
     background: var(--paymentPrimaryLight);
     color: var(--paymentDisabled);
     cursor: not-allowed;
     opacity: 0.7;
 }
 
-.btnSecondary {
+.btn-secondary {
     background: var(--paymentSecondary);
     color: var(--paymentSecondaryBorder);
     padding: 0.75rem 1.5rem;
@@ -77,22 +159,18 @@
     transition: background 0.2s, color 0.2s;
 }
 
-.btnSecondary:hover {
+.btn-secondary:hover {
     background: var(--paymentSecondaryBorder);
-    color: #fff;
+    color: var(--colorWhite);
 }
 
+
 @keyframes pulseRed {
-    0%, 100% {
-        box-shadow: 0 0 0 transparent;
-    }
-    50% {
-        box-shadow: 0 0 16px 4px red;
-    }
+    0%, 100% { box-shadow: 0 0 0 transparent; }
+    50%      { box-shadow: 0 0 8px 2px rgba(231,76,60,0.6); }
 }
 
 .invalid-pulse {
-
     border-color: red;
     animation: pulseRed 0.6s ease-out;
 }
