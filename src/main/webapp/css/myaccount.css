@@ -1,0 +1,160 @@
+/* Profile section styles */
+.profile-section {
+    background-color: white;
+    padding: 20px;
+    border-radius: 8px;
+    box-shadow: 0 2px 5px rgba(136, 96, 208, 0.15);
+    margin-bottom: 30px;
+}
+
+/* Reservations styles */
+.reservations-container {
+    background-color: white;
+    border-radius: 8px;
+    box-shadow: 0 2px 5px rgba(136, 96, 208, 0.15);
+    padding: 20px;
+    margin-bottom: 30px;
+}
+
+.reservations-scroll {
+    max-height: 500px;
+    overflow-y: auto;
+    margin-bottom: 20px;
+}
+
+.reservations-table {
+    width: 100%;
+    border-collapse: collapse;
+}
+
+.reservations-table th {
+    background-color: #f8f9fa;
+    padding: 12px 15px;
+    text-align: left;
+    font-weight: bold;
+    border-bottom: 2px solid #dee2e6;
+    color: #8860d0;
+}
+
+.reservations-table td {
+    padding: 12px 15px;
+    border-bottom: 1px solid #dee2e6;
+    vertical-align: middle;
+}
+
+.reservations-table tr:last-child td {
+    border-bottom: none;
+}
+
+.reservations-table tr:hover {
+    background-color: #f5f0ff;
+}
+
+/* Status indicators */
+.status-confirmed {
+    color: #28a745;
+    font-weight: bold;
+}
+
+.status-pending {
+    color: #ffc107;
+    font-weight: bold;
+}
+
+.status-cancelled {
+    color: #dc3545;
+    font-weight: bold;
+}
+
+/* Button styles specific to this page */
+.btn-cancel {
+    background-color: #dc3545;
+    color: white;
+    border: none;
+    padding: 6px 12px;
+    border-radius: 4px;
+    cursor: pointer;
+    transition: background-color 0.3s;
+    text-decoration: none;
+    display: inline-block;
+}
+
+.btn-cancel:hover {
+    background-color: #c82333;
+}
+
+.btn-payment {
+    background-color: #28a745;
+    color: white;
+    border: none;
+    padding: 6px 12px;
+    border-radius: 4px;
+    cursor: pointer;
+    transition: background-color 0.3s;
+    margin-right: 8px;
+    text-decoration: none;
+    display: inline-block;
+}
+
+.btn-payment:hover {
+    background-color: #218838;
+}
+
+.no-reservations {
+    text-align: center;
+    padding: 30px;
+}
+
+/* Alert styles */
+.alert {
+    padding: 15px;
+    margin-bottom: 20px;
+    border: 1px solid transparent;
+    border-radius: 4px;
+    position: relative;
+}
+
+.alert-success {
+    color: #155724;
+    background-color: #d4edda;
+    border-color: #c3e6cb;
+}
+
+.alert-danger {
+    color: #721c24;
+    background-color: #f8d7da;
+    border-color: #f5c6cb;
+}
+
+.alert-dismissible {
+    padding-right: 4rem;
+}
+
+.close {
+    position: absolute;
+    top: 0;
+    right: 0;
+    padding: 15px;
+    color: inherit;
+    background: transparent;
+    border: 0;
+    font-size: 1.5rem;
+    cursor: pointer;
+}
+
+/* Responsive styles */
+@media (max-width: 768px) {
+    .reservations-table {
+        font-size: 0.9rem;
+    }
+
+    .reservations-table th,
+    .reservations-table td {
+        padding: 8px 10px;
+    }
+
+    .btn-cancel, .btn-payment {
+        padding: 4px 8px;
+        font-size: 0.9rem;
+    }
+}

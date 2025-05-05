@@ -12,7 +12,6 @@ import java.time.temporal.ChronoUnit;
 import java.util.List;
 
 public class ReservationService {
-
     private ReserveDao reserveDao;
     private RoomDao roomDao;
     private UserDao userDao;
@@ -69,13 +68,11 @@ public class ReservationService {
 
     private Room findAvailableRoom(String roomType) {
         List<Room> allRooms = roomDao.getAll();
-
         for (Room room : allRooms) {
             if (room.getType().equals(roomType) && room.isAvailable()) {
                 return room;
             }
         }
-
         return null;
     }
 
@@ -83,31 +80,70 @@ public class ReservationService {
         return reserveDao.findReserveByUserId(userId);
     }
 
+    /**
+     * Cancels a reservation without checking user ownership
+     * This method is for admin use or when user verification is done elsewhere
+     *
+     * @param reserveId The ID of the reservation to cancel
+     * @throws Exception If the reservation is not found or cannot be cancelled
+     */
     public void cancelReservation(Long reserveId) throws Exception {
         Reserve reserve = reserveDao.getReserveById(reserveId);
-
         if (reserve == null) {
             throw new Exception("Reservation not found");
         }
+
+        // Update status to cancelled
+        reserve.setStatus("Cancelled");
+        reserveDao.updateReserve(reserve);
 
         // Make room available again
         Room room = reserve.getRoom();
         room.setAvailable(true);
         roomDao.updateRoom(room);
-
-        // Delete reservation
-        reserveDao.deleteReserve(reserveId);
     }
 
     public void updateReservationStatus(Long reserveId, String status) throws Exception {
         Reserve reserve = reserveDao.getReserveById(reserveId);
-
         if (reserve == null) {
             throw new Exception("Reservation not found");
         }
-
         reserve.setStatus(status);
         reserveDao.updateReserve(reserve);
     }
 
+    /**
+     * Cancels a reservation with user verification
+     * This method checks if the reservation belongs to the specified user
+     *
+     * @param reserveId The ID of the reservation to cancel
+     * @param userId The ID of the user making the cancellation request
+     * @return true if cancellation was successful, false otherwise
+     */
+    public boolean cancelReservation(Long reserveId, Long userId) {
+        try {
+            // Get the reservation
+            Reserve reserve = reserveDao.getReserveById(reserveId);
+
+            // Check if reservation exists and belongs to the user
+            if (reserve == null || !reserve.getUser().getId().equals(userId)) {
+                return false;
+            }
+
+            // Update status to cancelled
+            reserve.setStatus("Cancelled");
+            reserveDao.updateReserve(reserve);
+
+            // Make room available again
+            Room room = reserve.getRoom();
+            room.setAvailable(true);
+            roomDao.updateRoom(room);
+
+            return true;
+        } catch (Exception e) {
+            System.out.println("Error cancelling reservation: " + e.getMessage());
+            e.printStackTrace();
+            return false;
+        }
+    }
 }

@@ -12,8 +12,8 @@
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>ReZZZerv - My Account</title>
-    <link rel="stylesheet" href="https://stackpath.bootstrapcdn.com/bootstrap/4.5.2/css/bootstrap.min.css">
     <link rel="stylesheet" href="css/styles.css">
+    <link rel="stylesheet" href="css/myaccount.css">
     <link rel="stylesheet" href="css/dropdown.css">
 </head>
 <body>
@@ -49,6 +49,32 @@
 
 <div class="container mt-5 mb-5">
     <%
+        // Display success or error messages
+        String successMessage = (String) session.getAttribute("successMessage");
+        String errorMessage = (String) session.getAttribute("errorMessage");
+
+        if (successMessage != null) {
+    %>
+    <div class="alert alert-success alert-dismissible">
+        <%= successMessage %>
+        <button type="button" class="close" onclick="this.parentElement.style.display='none';">&times;</button>
+    </div>
+    <%
+            session.removeAttribute("successMessage");
+        }
+
+        if (errorMessage != null) {
+    %>
+    <div class="alert alert-danger alert-dismissible">
+        <%= errorMessage %>
+        <button type="button" class="close" onclick="this.parentElement.style.display='none';">&times;</button>
+    </div>
+    <%
+            session.removeAttribute("errorMessage");
+        }
+    %>
+
+    <%
         // Check if user is logged in
         User user = (User) session.getAttribute("user");
         if (user == null) {
@@ -62,7 +88,9 @@
         // Date formatter
         DateTimeFormatter dateFormatter = DateTimeFormatter.ofPattern("MMM dd, yyyy");
     %>
+
     <h1 class="mb-4">My Account</h1>
+
     <!-- Profile Information Section -->
     <div class="profile-section">
         <h2>Profile Information</h2>
@@ -77,75 +105,103 @@
             </div>
         </div>
     </div>
+
     <!-- Reservations Section -->
-    <h2>My Reservations</h2>
-    <% if (reservations.isEmpty()) { %>
-    <div class="no-reservations">
-        <p>You don't have any reservations yet.</p>
-        <a href="booking.jsp" class="btn btn-primary mt-3">Make a Reservation</a>
-    </div>
-    <% } else { %>
-    <div class="row">
-        <% for (Reserve reservation : reservations) {
-            Room room = reservation.getRoom();
-            long nights = ChronoUnit.DAYS.between(reservation.getCheckIn(), reservation.getCheckOut());
-            double totalPrice = room.getPrice() * nights;
-            String statusClass = "";
-            if ("confirmed".equalsIgnoreCase(reservation.getStatus())) {
-                statusClass = "status-confirmed";
-            } else if ("pending".equalsIgnoreCase(reservation.getStatus())) {
-                statusClass = "status-pending";
-            } else if ("cancelled".equalsIgnoreCase(reservation.getStatus())) {
-                statusClass = "status-cancelled";
-            }
-        %>
-        <div class="col-md-6">
-            <div class="card reservation-card">
-                <div class="card-header d-flex justify-content-between align-items-center">
-                    <span>Reservation #<%= reservation.getId() %></span>
-                    <span class="<%= statusClass %>"><%= reservation.getStatus() %></span>
-                </div>
-                <div class="card-body">
-                    <h5 class="card-title"><%= room.getType() %> Room</h5>
-                    <p class="card-text">
-                        <strong>Room Number:</strong> <%= room.getRoomNumber() %><br>
-                        <strong>Check-in:</strong> <%= reservation.getCheckIn().format(dateFormatter) %><br>
-                        <strong>Check-out:</strong> <%= reservation.getCheckOut().format(dateFormatter) %><br>
-                        <strong>Duration:</strong> <%= nights %> night<%= nights > 1 ? "s" : "" %><br>
-                        <strong>Total Price:</strong> $<%= String.format("%.2f", totalPrice) %>
-                    </p>
-                    <% if ("confirmed".equalsIgnoreCase(reservation.getStatus())) { %>
-                    <a href="cancelReservation?id=<%= reservation.getId() %>" class="btn btn-danger"
-                       onclick="return confirm('Are you sure you want to cancel this reservation?')">
-                        Cancel Reservation
-                    </a>
-                    <% } else if ("pending".equalsIgnoreCase(reservation.getStatus())) { %>
-                    <a href="completePayment?id=<%= reservation.getId() %>" class="btn btn-success">
-                        Complete Payment
-                    </a>
-                    <a href="cancelReservation?id=<%= reservation.getId() %>" class="btn btn-danger ml-2"
-                       onclick="return confirm('Are you sure you want to cancel this reservation?')">
-                        Cancel Reservation
-                    </a>
-                    <% } %>
-                </div>
-            </div>
+    <div class="reservations-container">
+        <h2>My Reservations</h2>
+
+        <% if (reservations.isEmpty()) { %>
+        <div class="no-reservations">
+            <p>You don't have any reservations yet.</p>
+            <a href="booking.jsp" class="btn btn-primary mt-3">Make a Reservation</a>
+        </div>
+        <% } else { %>
+        <div class="reservations-scroll">
+            <table class="reservations-table">
+                <thead>
+                <tr>
+                    <th>Reservation #</th>
+                    <th>Room</th>
+                    <th>Check-in</th>
+                    <th>Check-out</th>
+                    <th>Nights</th>
+                    <th>Total</th>
+                    <th>Status</th>
+                    <th>Actions</th>
+                </tr>
+                </thead>
+                <tbody>
+                <% for (Reserve reservation : reservations) {
+                    Room room = reservation.getRoom();
+                    long nights = ChronoUnit.DAYS.between(reservation.getCheckIn(), reservation.getCheckOut());
+                    double totalPrice = room.getPrice() * nights;
+                    String statusClass = "";
+
+                    // Debug the status
+                    System.out.println("Reservation #" + reservation.getId() + " status: '" + reservation.getStatus() + "'");
+
+                    if (reservation.getStatus().contains("Confirmed") || reservation.getStatus().contains("confirmed")) {
+                        statusClass = "status-confirmed";
+                    } else if (reservation.getStatus().contains("Pending") || reservation.getStatus().contains("pending")) {
+                        statusClass = "status-pending";
+                    } else if (reservation.getStatus().contains("Cancelled") || reservation.getStatus().contains("cancelled")) {
+                        statusClass = "status-cancelled";
+                    }
+                %>
+                <tr>
+                    <td><%= reservation.getId() %></td>
+                    <td><%= room.getType() %> (Room <%= room.getRoomNumber() %>)</td>
+                    <td><%= reservation.getCheckIn().format(dateFormatter) %></td>
+                    <td><%= reservation.getCheckOut().format(dateFormatter) %></td>
+                    <td><%= nights %> night<%= nights > 1 ? "s" : "" %></td>
+                    <td>$<%= String.format("%.2f", totalPrice) %></td>
+                    <td class="<%= statusClass %>"><%= reservation.getStatus() %></td>
+                    <td>
+                        <%
+                            // Always show cancel button regardless of status
+                            // This addresses the issue where buttons weren't showing up
+                        %>
+                        <a href="cancelReservation?id=<%= reservation.getId() %>" class="btn-cancel"
+                           onclick="return confirm('Are you sure you want to cancel this reservation?')">
+                            Cancel
+                        </a>
+
+                        <%
+                            // If status contains "Pending", also show the payment button
+                            if (reservation.getStatus().contains("Pending") || reservation.getStatus().contains("pending")) {
+                        %>
+                        <a href="completePayment?id=<%= reservation.getId() %>" class="btn-payment">
+                            Pay
+                        </a>
+                        <% } %>
+                    </td>
+                </tr>
+                <% } %>
+                </tbody>
+            </table>
+        </div>
+        <div class="mt-4">
+            <a href="booking.jsp" class="btn btn-primary">Make Another Reservation</a>
         </div>
         <% } %>
     </div>
-    <div class="mt-4">
-        <a href="booking.jsp" class="btn btn-primary">Make Another Reservation</a>
-    </div>
-    <% } %>
 </div>
 
 <footer>
     <p>&copy; 2025 ReZZZerv - All rights reserved</p>
 </footer>
 
-<script src="https://code.jquery.com/jquery-3.5.1.slim.min.js"></script>
-<script src="https://cdn.jsdelivr.net/npm/popper.js@1.16.1/dist/umd/popper.min.js"></script>
-<script src="https://stackpath.bootstrapcdn.com/bootstrap/4.5.2/js/bootstrap.min.js"></script>
+<script>
+    // Simple JavaScript to handle alert dismissal
+    document.addEventListener('DOMContentLoaded', function() {
+        var closeButtons = document.querySelectorAll('.close');
+        closeButtons.forEach(function(button) {
+            button.addEventListener('click', function() {
+                this.parentElement.style.display = 'none';
+            });
+        });
+    });
+</script>
 <script src="js/main.js"></script>
 </body>
 </html>
