@@ -1,5 +1,5 @@
 <%@ page language="java" contentType="text/html; charset=UTF-8" pageEncoding="UTF-8"%>
-
+<%@ page import="model.users.User" %>
 <!DOCTYPE html>
 <html lang="en">
 <head>
@@ -7,6 +7,7 @@
   <meta name="viewport" content="width=device-width, initial-scale=1.0">
   <title>ReZZZerv - Hotel Booking</title>
   <link rel="stylesheet" href="css/styles.css">
+  <link rel="stylesheet" href="css/dropdown.css">
 </head>
 <body>
 <header>
@@ -20,9 +21,24 @@
       <li><a href="payment.jsp">Payment</a></li>
     </ul>
     <ul class="nav-auth">
+      <%
+        // Check if user is logged in
+        User currentUser = (User) session.getAttribute("user");
+        if (currentUser == null) {
+      %>
       <li><a href="login.jsp" class="login-link">Login</a></li>
       <li><a href="register.jsp" class="register-link">Register</a></li>
+      <% } else { %>
+      <li class="dropdown">
+        <a href="#" class="user-name"><%= currentUser.getName() %></a>
+        <div class="dropdown-content">
+          <a href="myaccount.jsp">My Account</a>
+          <a href="logout.jsp">Logout</a>
+        </div>
+      </li>
+      <% } %>
     </ul>
+
   </nav>
 </header>
 

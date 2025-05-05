@@ -119,6 +119,7 @@
     <title>ReZZZerv - Payment</title>
     <link rel="stylesheet" href="css/styles.css">
     <link rel="stylesheet" href="css/payment.css">
+    <link rel="stylesheet" href="css/dropdown.css">
 </head>
 <body>
 <header>
@@ -131,8 +132,22 @@
             <li><a href="contact.jsp">Contact</a></li>
         </ul>
         <ul class="nav-auth">
+            <%
+                // Check if user is logged in
+                User currentUser = (User) session.getAttribute("user");
+                if (currentUser == null) {
+            %>
             <li><a href="login.jsp" class="login-link">Login</a></li>
             <li><a href="register.jsp" class="register-link">Register</a></li>
+            <% } else { %>
+            <li class="dropdown">
+                <a href="#" class="user-name"><%= currentUser.getName() %></a>
+                <div class="dropdown-content">
+                    <a href="myaccount.jsp">My Account</a>
+                    <a href="logout.jsp">Logout</a>
+                </div>
+            </li>
+            <% } %>
         </ul>
     </nav>
 </header>
@@ -297,5 +312,6 @@
 <footer>
     <p>&copy; 2025 ReZZZerv - All rights reserved</p>
 </footer>
+<script src="js/main.js"></script>
 </body>
 </html>

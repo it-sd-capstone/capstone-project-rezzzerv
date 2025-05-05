@@ -1,5 +1,6 @@
 <%@ page language="java" contentType="text/html; charset=UTF-8" pageEncoding="UTF-8"%>
 <%@ page import="java.util.List, model.rooms.Room" %>
+<%@ page import="model.users.User" %>
 <!DOCTYPE html>
 <html lang="en">
     <head>
@@ -8,6 +9,7 @@
         <title>ReZZZerv - Admin</title>
         <link rel="stylesheet" href="css/styles.css" />
         <link rel="stylesheet" href="css/admin.css" />
+        <link rel="stylesheet" href="css/dropdown.css">
     </head>
     <body>
 
@@ -21,7 +23,21 @@
                     <li><a href="contact.jsp">Contact</a></li>
                 </ul>
                 <ul class="nav-auth">
-                    <li><a href="logout.html" class="login-link">Logout</a></li>
+                    <%
+                        // Check if user is logged in
+                        User currentUser = (User) session.getAttribute("user");
+                        if (currentUser == null) {
+                    %>
+                    <li><a href="logout.jsp" class="login-link">Logout</a></li>
+                    <% } else { %>
+                    <li class="dropdown">
+                        <a href="#" class="user-name"><%= currentUser.getName() %></a>
+                        <div class="dropdown-content">
+                            <a href="myaccount.jsp">My Account</a>
+                            <a href="logout.jsp">Logout</a>
+                        </div>
+                    </li>
+                    <% } %>
                 </ul>
             </nav>
         </header>
@@ -179,5 +195,6 @@
         </footer>
         <script src="js/admin.js"></script>
         <script src="js/validation.js"></script>
+        <script src="js/main.js"></script>
     </body>
 </html>
