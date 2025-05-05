@@ -1,8 +1,16 @@
 <%@ page language="java" contentType="text/html; charset=UTF-8" pageEncoding="UTF-8"%>
 <%@ page import="model.users.User" %>
+<%@ page import="model.reserve.Reserve" %>
+<%@ page import="model.rooms.Room" %>
+<%@ page import="model.payment.Payment" %>
+<%@ page import="daos.ReserveDao" %>
+<%@ page import="java.time.LocalDate" %>
+<%@ page import="java.time.format.DateTimeFormatter" %>
+<%@ page import="java.time.temporal.ChronoUnit" %>
+<%@ page import="java.util.Locale" %>
 <%
-    // Check if this is a test view
-    boolean isTest = "true".equals(request.getParameter("test"));
+    // Get the current user from session
+    User currentUser = (User) session.getAttribute("user");
 
     // Variables to store data
     String roomType = null;
@@ -15,44 +23,82 @@
     String guestEmail = null;
     Long reservationId = null;
 
-    // If test mode, create dummy data
-    if (isTest) {
-        // Create simple test data without using model classes
-        roomType = "Premium Suite";
-        roomNumber = 205;
-        nights = 3L;
-        totalPrice = 658.77;
-        checkInFormatted = "June 15, 2025";
-        checkOutFormatted = "June 18, 2025";
-        guestName = "John Doe";
-        guestEmail = "john.doe@example.com";
-        reservationId = 12345L;
-    } else {
-        // Get data from session
-        roomType = (String) session.getAttribute("roomType");
-        roomNumber = (Integer) session.getAttribute("roomNumber");
-        nights = (Long) session.getAttribute("nights");
-        totalPrice = (Double) session.getAttribute("totalPrice");
-        checkInFormatted = (String) session.getAttribute("checkInFormatted");
-        checkOutFormatted = (String) session.getAttribute("checkOutFormatted");
-        guestName = (String) session.getAttribute("guestName");
-        guestEmail = (String) session.getAttribute("guestEmail");
+    // Get the Payment object from session
+    Payment payment = (Payment) session.getAttribute("payment");
+    Reserve reservation = null;
 
-        // Try to get reservation ID from reserve object
-        Object reserveObj = session.getAttribute("reserve");
-        if (reserveObj != null) {
-            try {
-                reservationId = (Long) reserveObj.getClass().getMethod("getId").invoke(reserveObj);
-            } catch (Exception e) {
-                // Handle any errors
-                System.out.println("<!-- Error getting reservation ID: " + e.getMessage() + " -->");
+    if (payment != null) {
+        // Get the reservation from the payment
+        ReserveDao reserveDao = new ReserveDao();
+        reservation = reserveDao.getReserveById(payment.getReserve().getId());
+
+        if (reservation != null) {
+            // Get reservation ID
+            reservationId = reservation.getId();
+
+            // Get room information
+            Room room = reservation.getRoom();
+            if (room != null) {
+                roomType = room.getType();
+                roomNumber = room.getRoomNumber();
+
+                // Get check-in and check-out dates
+                LocalDate checkIn = reservation.getCheckIn();
+                LocalDate checkOut = reservation.getCheckOut();
+
+                if (checkIn != null && checkOut != null) {
+                    // Format dates
+                    DateTimeFormatter formatter = DateTimeFormatter.ofPattern("MMMM d, yyyy", Locale.ENGLISH);
+                    checkInFormatted = checkIn.format(formatter);
+                    checkOutFormatted = checkOut.format(formatter);
+
+                    // Calculate number of nights
+                    nights = ChronoUnit.DAYS.between(checkIn, checkOut);
+
+                    // Get total price from payment
+                    totalPrice = payment.getAmount();
+                }
+            }
+
+            // Get guest information
+            User user = reservation.getUser();
+            if (user != null) {
+                guestName = user.getName() + " " + user.getLastName();
+                guestEmail = user.getEmail();
             }
         }
     }
 
+    // If we couldn't get the data from the payment/reservation, fall back to session attributes
+    if (roomType == null) {
+        roomType = (String) session.getAttribute("roomType");
+    }
+
+    if (roomNumber == null) {
+        roomNumber = (Integer) session.getAttribute("roomNumber");
+    }
+
+    if (nights == null) {
+        nights = (Long) session.getAttribute("nights");
+    }
+
+    if (totalPrice == null) {
+        totalPrice = (Double) session.getAttribute("totalPrice");
+    }
+
+    // If we still don't have guest information, use the current user
+    if (guestName == null && currentUser != null) {
+        guestName = currentUser.getName() + " " + currentUser.getLastName();
+        guestEmail = currentUser.getEmail();
+    }
+
+    // Ensure we have valid values for calculations
+    if (totalPrice == null) totalPrice = 0.0;
+    if (nights == null) nights = 1L;
+
     // Calculate taxes and total
-    double taxesAndFees = totalPrice != null ? totalPrice * 0.15 : 0.0;
-    double grandTotal = totalPrice != null ? totalPrice + taxesAndFees : 0.0;
+    double taxesAndFees = totalPrice * 0.15;
+    double grandTotal = totalPrice + taxesAndFees;
 %>
 <!DOCTYPE html>
 <html lang="en">
@@ -76,8 +122,6 @@
         </ul>
         <ul class="nav-auth">
             <%
-                // Check if user is logged in
-                User currentUser = (User) session.getAttribute("user");
                 if (currentUser == null) {
             %>
             <li><a href="login.jsp" class="login-link">Login</a></li>
@@ -100,41 +144,42 @@
         <h1>Reservation Confirmed</h1>
         <p>Thank you for choosing ReZZZerv</p>
     </section>
-
     <div class="confirmation-container">
         <div class="confirmation-header">
             <h2>Your Reservation is Confirmed!</h2>
             <p>A confirmation email has been sent to your registered email address.</p>
         </div>
-
         <div class="confirmation-details">
             <div class="detail-group">
                 <h3>Reservation Details</h3>
+                <% if (reservationId != null) { %>
                 <p><strong>Confirmation Number:</strong> #<%= reservationId %></p>
+                <% } else { %>
+                <p><strong>Confirmation Number:</strong> Your confirmation number will be sent via email</p>
+                <% } %>
+
+                <% if (checkInFormatted != null && checkOutFormatted != null) { %>
                 <p><strong>Check-in:</strong> <%= checkInFormatted %></p>
                 <p><strong>Check-out:</strong> <%= checkOutFormatted %></p>
-                <p><strong>Nights:</strong> <%= nights %></p>
+                <% } %>
+                <p><strong>Stay Duration:</strong> <%= nights %> night<%= nights > 1 ? "s" : "" %></p>
             </div>
-
             <div class="detail-group">
                 <h3>Room Information</h3>
-                <p><strong>Room Type:</strong> <%= roomType %></p>
-                <p><strong>Room Number:</strong> <%= roomNumber %></p>
+                <p><strong>Room Type:</strong> <%= roomType != null ? roomType : "Standard Room" %></p>
+                <p><strong>Room Number:</strong> <%= roomNumber != null ? roomNumber : "To be assigned" %></p>
             </div>
         </div>
-
         <div class="detail-group">
             <h3>Guest Information</h3>
-            <p><strong>Name:</strong> <%= guestName %></p>
-            <p><strong>Email:</strong> <%= guestEmail %></p>
+            <p><strong>Name:</strong> <%= guestName != null ? guestName : "Guest" %></p>
+            <p><strong>Email:</strong> <%= guestEmail != null ? guestEmail : "Not provided" %></p>
         </div>
-
         <div class="confirmation-total">
             <p>Room Charge: $<%= String.format("%.2f", totalPrice) %></p>
             <p>Taxes & Fees: $<%= String.format("%.2f", taxesAndFees) %></p>
             <p class="total-amount">Total Paid: $<%= String.format("%.2f", grandTotal) %></p>
         </div>
-
         <div class="confirmation-actions">
             <a href="index.jsp" class="btn-primary">Return to Home</a>
             <a href="booking.jsp" class="btn-secondary">Book Another Room</a>
@@ -145,6 +190,7 @@
 <footer>
     <p>&copy; 2025 ReZZZerv - All rights reserved</p>
 </footer>
+
 <script src="js/main.js"></script>
 </body>
 </html>
