@@ -10,6 +10,7 @@ import model.users.User;
 import java.time.LocalDate;
 import java.time.temporal.ChronoUnit;
 import java.util.List;
+import java.util.stream.Collectors;
 
 public class ReservationService {
 
@@ -35,10 +36,12 @@ public class ReservationService {
             throw new Exception("User not found");
         }
 
-        // Find available room
-        Room selectedRoom = findAvailableRoom(roomType);
+
+        // find available room within the selected dates.
+        Room selectedRoom = findAvailableRoom(roomType, checkIn, checkOut);
         if (selectedRoom == null) {
-            throw new Exception("No " + roomType + " rooms available for the selected dates");
+            throw new Exception("No " + roomType +
+                    " rooms available from " + checkIn + " to " + checkOut);
         }
 
         // Create reserve object
@@ -52,9 +55,11 @@ public class ReservationService {
         // Save reservation to database
         reserveDao.insertReserve(reserve);
 
-        // Mark room as unavailable
-        selectedRoom.setAvailable(false);
-        roomDao.updateRoom(selectedRoom);
+        // Mark room as unavailable no needed any more for reservations
+        // since it will be available depending on the dates
+
+        // selectedRoom.setAvailable(false);
+        //roomDao.updateRoom(selectedRoom);
 
         return reserve;
     }
@@ -65,18 +70,6 @@ public class ReservationService {
 
     public double calculateTotalPrice(Room room, long nights) {
         return room.getPrice() * nights;
-    }
-
-    private Room findAvailableRoom(String roomType) {
-        List<Room> allRooms = roomDao.getAll();
-
-        for (Room room : allRooms) {
-            if (room.getType().equals(roomType) && room.isAvailable()) {
-                return room;
-            }
-        }
-
-        return null;
     }
 
     public List<Reserve> getUserReservations(Long userId) {
@@ -90,13 +83,14 @@ public class ReservationService {
             throw new Exception("Reservation not found");
         }
 
+        reserveDao.deleteReserve(reserveId);
         // Make room available again
         Room room = reserve.getRoom();
         room.setAvailable(true);
         roomDao.updateRoom(room);
 
         // Delete reservation
-        reserveDao.deleteReserve(reserveId);
+        //reserveDao.deleteReserve(reserveId);
     }
 
     public void updateReservationStatus(Long reserveId, String status) throws Exception {
@@ -108,6 +102,32 @@ public class ReservationService {
 
         reserve.setStatus(status);
         reserveDao.updateReserve(reserve);
+    }
+
+
+    private Room findAvailableRoom(String roomType, LocalDate checkIn, LocalDate checkOut) {
+        List<Room> candidates = roomDao.getAll().stream()
+                .filter(r -> r.getType().equals(roomType))
+                .collect(Collectors.toList());
+
+        System.out.printf("Searching availability for %s from %s to %s%n", roomType, checkIn, checkOut);
+
+        for (Room room : candidates) {
+            List<Reserve> reservations = reserveDao.getReservationsByRoomId(room.getId());
+
+
+            // check if not overlapping dates exist
+            boolean overlaps = reservations.stream().anyMatch(res ->
+                    checkIn.isBefore(res.getCheckOut()) &&
+                            checkOut.isAfter(res.getCheckIn())
+            );
+
+
+            if (!overlaps) {
+                return room;
+            }
+        }
+        return null;
     }
 
 }

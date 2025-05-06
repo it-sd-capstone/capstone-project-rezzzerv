@@ -4,7 +4,6 @@ import java.io.*;
 
 import jakarta.servlet.http.*;
 import jakarta.servlet.annotation.*;
-import jakarta.servlet.ServletException;
 import service.RoomService;
 
 @WebServlet("/roomForm")

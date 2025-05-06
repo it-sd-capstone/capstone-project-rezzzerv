@@ -11,20 +11,13 @@ import java.util.List;
 import java.util.Map;
 
 public class RoomDao {
-    private Connection connection;
 
-    public RoomDao() {
-        try {
-            connection = DbConnection.getConnection();
-        } catch (Exception e) {
-            System.err.println("Error connecting to database: " + e.getMessage());
-        }
-    }
 
-    // Method used in Main.java - renamed from createRoom to insertRoom
     public boolean insertRoom(Room room) {
         String query = "INSERT INTO rooms (roomNumber, available, type, price) VALUES (?, ?, ?, ?)";
-        try (PreparedStatement pstmt = connection.prepareStatement(query, Statement.RETURN_GENERATED_KEYS)) {
+        try (Connection conn = DbConnection.getConnection();
+            PreparedStatement pstmt = conn.prepareStatement(query, Statement.RETURN_GENERATED_KEYS)) {
+
             pstmt.setInt(1, room.getRoomNumber());
             pstmt.setBoolean(2, room.isAvailable());
             pstmt.setString(3, room.getType());
@@ -47,12 +40,13 @@ public class RoomDao {
         }
     }
 
-    // Method used in Main.java - renamed from getAllRooms to getAll
+
     public List<Room> getAll() {
         List<Room> rooms = new ArrayList<>();
         String query = "SELECT * FROM rooms";
 
-        try (Statement stmt = connection.createStatement();
+        try (Connection conn = DbConnection.getConnection();
+             Statement stmt = conn.createStatement();
              ResultSet rs = stmt.executeQuery(query)) {
 
             while (rs.next()) {
@@ -72,12 +66,13 @@ public class RoomDao {
         return rooms;
     }
 
-    // Get a room by ID - already exists but keeping for clarity
+
     public Room getRoomById(Long id) {
         String query = "SELECT * FROM rooms WHERE id = ?";
-        try (PreparedStatement pstmt = connection.prepareStatement(query)) {
-            pstmt.setLong(1, id);
+        try (Connection conn = DbConnection.getConnection();
+            PreparedStatement pstmt = conn.prepareStatement(query)) {
 
+            pstmt.setLong(1, id);
             try (ResultSet rs = pstmt.executeQuery()) {
                 if (rs.next()) {
                     String type = rs.getString("type");
@@ -94,10 +89,12 @@ public class RoomDao {
         return null;
     }
 
-    // Method used in Main.java - renamed from updateRoom to match
+
     public boolean updateRoom(Room room) {
         String query = "UPDATE rooms SET roomNumber = ?, available = ?, type = ?, price = ? WHERE id = ?";
-        try (PreparedStatement pstmt = connection.prepareStatement(query)) {
+        try (Connection conn = DbConnection.getConnection();
+            PreparedStatement pstmt = conn.prepareStatement(query)) {
+
             pstmt.setInt(1, room.getRoomNumber());
             pstmt.setBoolean(2, room.isAvailable());
             pstmt.setString(3, room.getType());
@@ -112,12 +109,12 @@ public class RoomDao {
         }
     }
 
-    // Method used in Main.java - already exists but keeping for clarity
     public boolean deleteRoom(Long id) {
         String query = "DELETE FROM rooms WHERE id = ?";
-        try (PreparedStatement pstmt = connection.prepareStatement(query)) {
-            pstmt.setLong(1, id);
+        try (Connection conn = DbConnection.getConnection();
+            PreparedStatement pstmt = conn.prepareStatement(query)) {
 
+            pstmt.setLong(1, id);
             int affectedRows = pstmt.executeUpdate();
             return affectedRows > 0;
         } catch (SQLException e) {
@@ -126,18 +123,18 @@ public class RoomDao {
         }
     }
 
-    // Get all room types (distinct)
+
     public List<Room> getAllRoomTypes() {
         List<Room> roomTypes = new ArrayList<>();
         String query = "SELECT DISTINCT type, price FROM rooms GROUP BY type, price";
 
-        try (Statement stmt = connection.createStatement();
-             ResultSet rs = stmt.executeQuery(query)) {
+        try (Connection conn = DbConnection.getConnection();
+            Statement stmt = conn.createStatement();
+            ResultSet rs = stmt.executeQuery(query)) {
 
             while (rs.next()) {
                 String type = rs.getString("type");
                 double price = rs.getDouble("price");
-
                 // Create a room with default values for id, roomNumber, and available
                 Room room = RoomConstruction.createRoom(type, 0L, 0, true, price);
                 roomTypes.add(room);
@@ -152,8 +149,9 @@ public class RoomDao {
     // Count available rooms by type
     public int countAvailableRoomsByType(String type) {
         String query = "SELECT COUNT(*) FROM rooms WHERE type = ? AND available = true";
-        try (PreparedStatement pstmt = connection.prepareStatement(query)) {
-            pstmt.setString(1, type);
+        try (Connection conn = DbConnection.getConnection();
+             PreparedStatement pstmt = conn.prepareStatement(query)) {
+             pstmt.setString(1, type);
 
             try (ResultSet rs = pstmt.executeQuery()) {
                 if (rs.next()) {
@@ -180,19 +178,6 @@ public class RoomDao {
         }
     }
 
-    // Method to get room capacity by type
-    public int getRoomCapacity(String roomType) {
-        switch (roomType) {
-            case "Basic":
-                return 2;
-            case "Premium":
-                return 3;
-            case "Presidential":
-                return 4;
-            default:
-                return 2;
-        }
-    }
 
     // Method to get all room descriptions
     public Map<String, String> getAllRoomDescriptions() {
@@ -203,23 +188,4 @@ public class RoomDao {
         return descriptions;
     }
 
-    // Method to get all room capacities
-    public Map<String, Integer> getAllRoomCapacities() {
-        Map<String, Integer> capacities = new HashMap<>();
-        capacities.put("Basic", getRoomCapacity("Basic"));
-        capacities.put("Premium", getRoomCapacity("Premium"));
-        capacities.put("Presidential", getRoomCapacity("Presidential"));
-        return capacities;
-    }
-
-    // Close the database connection
-    public void close() {
-        try {
-            if (connection != null && !connection.isClosed()) {
-                connection.close();
-            }
-        } catch (SQLException e) {
-            System.err.println("Error closing database connection: " + e.getMessage());
-        }
-    }
 }

@@ -27,7 +27,6 @@ public class ReserveServlet extends HttpServlet {
     @Override
     public void doGet(HttpServletRequest request, HttpServletResponse response)
             throws ServletException, IOException {
-        // You can implement this if needed, for example to display a form
     }
 
     @Override
@@ -53,7 +52,6 @@ public class ReserveServlet extends HttpServlet {
             // Get form parameters
             String checkInStr = request.getParameter("checkIn");
             String checkOutStr = request.getParameter("checkOut");
-            //int guests = Integer.parseInt(request.getParameter("guests"));
             String roomType = request.getParameter("roomType");
 
             // Parse dates

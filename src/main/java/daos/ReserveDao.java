@@ -12,8 +12,14 @@ import java.util.List;
 
 public class ReserveDao {
 
-    private final UserDao userDao = new UserDao();
-    private final RoomDao roomDao = new RoomDao();
+    private final UserDao userDao;
+    private final RoomDao roomDao;
+
+    public ReserveDao() {
+        this.userDao = new UserDao();
+        this.roomDao = new RoomDao();
+    }
+
 
     // create a reserve
     public void insertReserve(Reserve reserve) {
@@ -148,12 +154,49 @@ public class ReserveDao {
         r.setCheckIn(rs.getObject("checkIn", LocalDate.class));
         r.setCheckOut(rs.getObject("checkOut", LocalDate.class));
 
-        // load the entities relational
-        User user = userDao.getUserById(rs.getLong("userId"));
-        Room room = roomDao.getRoomById(rs.getLong("roomId"));
+        // Load user fully
+        Long userId = rs.getLong("userId");
+        User user = userDao.getUserById(userId);
         r.setUser(user);
+
+        // load Room fully
+        Long roomId = rs.getLong("roomId");
+        Room room = roomDao.getRoomById(roomId);
         r.setRoom(room);
 
         return r;
+    }
+
+    public List<Reserve> getReservationsByRoomId(Long roomId) {
+        List<Reserve> reservations = new ArrayList<>();
+        String sql = "SELECT * FROM reserves WHERE roomId = ?";
+
+        try (Connection conn = DbConnection.getConnection();
+             PreparedStatement pstmt = conn.prepareStatement(sql)) {
+
+            pstmt.setLong(1, roomId);
+
+            try (ResultSet rs = pstmt.executeQuery()) {
+                while (rs.next()) {
+                    Reserve reserve = new Reserve();
+                    reserve.setId(rs.getLong("id"));
+                    reserve.setStatus(rs.getString("status"));
+                    reserve.setCheckIn(rs.getDate("checkIn").toLocalDate());
+                    reserve.setCheckOut(rs.getDate("checkOut").toLocalDate());
+
+                    // we can load the user and room here
+                     //reserve.setUser(userDao.getUserById(rs.getLong("userId")));
+                     //reserve.setRoom(roomDao.getRoomById(rs.getLong("roomId")));
+
+                    reservations.add(reserve);
+                }
+            }
+
+        } catch (SQLException e) {
+            System.out.println("Error getting reservations by roomId");
+            e.printStackTrace();
+        }
+
+        return reservations;
     }
 }
