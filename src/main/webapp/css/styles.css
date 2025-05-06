@@ -101,23 +101,27 @@ main {
     margin-bottom: 2rem;
 }
 
-.btn {
+.hero .btn {
     display: inline-block;
-    background-color: #8860d0;
-    color: white;
+    background-color: white;
+    color: #8860d0;
     padding: 0.8rem 2rem;
     border-radius: 4px;
     text-decoration: none;
     font-weight: bold;
     transition: all 0.3s;
     box-shadow: 0 2px 5px rgba(0, 0, 0, 0.2);
+    border: 2px solid black;
 }
 
-.btn:hover {
-    background-color: #7a51c0;
+.hero .btn:hover {
+    background-color: #e0e0e0;
+    color: #7a51c0;
     transform: translateY(-2px);
     box-shadow: 0 4px 8px rgba(0, 0, 0, 0.3);
+    border: 2px solid black;
 }
+
 
 /* Features section */
 .features {
