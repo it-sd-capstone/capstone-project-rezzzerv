@@ -14,7 +14,7 @@ import java.io.IOException;
 import java.time.LocalDate;
 import java.time.format.DateTimeFormatter;
 
-@WebServlet("/processReservation")
+@WebServlet(urlPatterns = {"/processReservation", "/cancelReservation"})
 public class ReserveServlet extends HttpServlet {
 
     private ReservationService reservationService;
@@ -27,6 +27,16 @@ public class ReserveServlet extends HttpServlet {
     @Override
     public void doGet(HttpServletRequest request, HttpServletResponse response)
             throws ServletException, IOException {
+
+        String path = request.getServletPath();
+
+        if ("/cancelReservation".equals(path)) {
+            handleCancellation(request, response);
+        } else {
+            // Default GET behavior or show form
+            response.sendRedirect("booking.jsp");
+        }
+
     }
 
     @Override
@@ -82,6 +92,48 @@ public class ReserveServlet extends HttpServlet {
         } catch (Exception e) {
             request.setAttribute("errorMessage", "An error occurred: " + e.getMessage());
             request.getRequestDispatcher("booking.jsp").forward(request, response);
+        }
+    }
+
+    private void handleCancellation(HttpServletRequest request, HttpServletResponse response)
+            throws ServletException, IOException {
+        HttpSession session = request.getSession();
+        Long userId = (Long) session.getAttribute("userId");
+
+        // Check if user is logged in
+        if (userId == null) {
+            session.setAttribute("errorMessage", "Please log in to cancel your reservation");
+            response.sendRedirect("login.jsp");
+            return;
+        }
+
+        // Get reservation ID from request
+        String reserveIdStr = request.getParameter("id");
+        if (reserveIdStr == null || reserveIdStr.isEmpty()) {
+            session.setAttribute("errorMessage", "Invalid reservation ID");
+            response.sendRedirect("myaccount.jsp");
+            return;
+        }
+
+        try {
+            Long reserveId = Long.parseLong(reserveIdStr);
+
+            // Cancel the reservation
+            boolean success = reservationService.cancelReservation(reserveId, userId);
+
+            if (success) {
+                session.setAttribute("successMessage", "Reservation #" + reserveId + " has been successfully cancelled");
+            } else {
+                session.setAttribute("errorMessage", "Failed to cancel reservation. You may not have permission or the reservation doesn't exist.");
+            }
+
+            response.sendRedirect("myaccount.jsp");
+        } catch (NumberFormatException e) {
+            session.setAttribute("errorMessage", "Invalid reservation ID format");
+            response.sendRedirect("myaccount.jsp");
+        } catch (Exception e) {
+            session.setAttribute("errorMessage", "An error occurred: " + e.getMessage());
+            response.sendRedirect("myaccount.jsp");
         }
     }
 }

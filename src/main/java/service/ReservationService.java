@@ -13,7 +13,6 @@ import java.util.List;
 import java.util.stream.Collectors;
 
 public class ReservationService {
-
     private ReserveDao reserveDao;
     private RoomDao roomDao;
     private UserDao userDao;
@@ -76,33 +75,16 @@ public class ReservationService {
         return reserveDao.findReserveByUserId(userId);
     }
 
-    public void cancelReservation(Long reserveId) throws Exception {
-        Reserve reserve = reserveDao.getReserveById(reserveId);
-
-        if (reserve == null) {
-            throw new Exception("Reservation not found");
-        }
-
-        reserveDao.deleteReserve(reserveId);
-        // Make room available again
-        Room room = reserve.getRoom();
-        room.setAvailable(true);
-        roomDao.updateRoom(room);
-
-        // Delete reservation
-        //reserveDao.deleteReserve(reserveId);
-    }
 
     public void updateReservationStatus(Long reserveId, String status) throws Exception {
         Reserve reserve = reserveDao.getReserveById(reserveId);
-
         if (reserve == null) {
             throw new Exception("Reservation not found");
         }
-
         reserve.setStatus(status);
         reserveDao.updateReserve(reserve);
     }
+
 
 
     private Room findAvailableRoom(String roomType, LocalDate checkIn, LocalDate checkOut) {
@@ -128,6 +110,35 @@ public class ReservationService {
             }
         }
         return null;
+    }
+
+
+
+    public boolean cancelReservation(Long reserveId, Long userId) {
+        try {
+            // Get the reservation
+            Reserve reserve = reserveDao.getReserveById(reserveId);
+
+            // Check if reservation exists and belongs to the user
+            if (reserve == null || !reserve.getUser().getId().equals(userId)) {
+                return false;
+            }
+
+            // Update status to cancelled
+            reserve.setStatus("Cancelled");
+            reserveDao.updateReserve(reserve);
+
+            // Make room available again
+            Room room = reserve.getRoom();
+            room.setAvailable(true);
+            roomDao.updateRoom(room);
+
+            return true;
+        } catch (Exception e) {
+            System.out.println("Error cancelling reservation: " + e.getMessage());
+            e.printStackTrace();
+            return false;
+        }
     }
 
 }
