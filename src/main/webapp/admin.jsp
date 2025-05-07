@@ -140,19 +140,37 @@
         </div>
         <div class="adminContainer">
             <section id="roomsListSection">
-                <div id="flashContainer">
-                    <%
-                        String flash = (String) request.getAttribute("flash");
-                        if (flash != null) {
-                    %>
-                    <div class="flash-message success">
-                        <span class="flash-text"><%= flash %></span>
-                        <button type="button" class="flash-close" aria-label="Dismiss">&times;</button>
+<%--                <div id="flashContainer">--%>
+<%--                    <%--%>
+<%--                        String flash = (String) request.getAttribute("flash");--%>
+<%--                        if (flash != null) {--%>
+<%--                    %>--%>
+<%--                    <div class="flash-message success">--%>
+<%--                        <span class="flash-text"><%= flash %></span>--%>
+<%--                        <button type="button" class="flash-close" aria-label="Dismiss">&times;</button>--%>
+<%--                    </div>--%>
+<%--                    <%--%>
+<%--                        }--%>
+<%--                    %>--%>
+<%--                </div>--%>
+
+                    <div id="flashContainer">
+                        <%
+                            String flash = (String) request.getAttribute("flash");
+                            String flashError   = (String) request.getAttribute("flash_error");
+                            if (flash != null) {
+                        %>
+                        <div class="flash-message success"><%= flash %></div>
+                        <%
+                            }
+                            if (flashError != null) {
+                        %>
+                        <div class="flash-message error"><%= flashError %></div>
+                        <%
+                            }
+                        %>
                     </div>
-                    <%
-                        }
-                    %>
-                </div>
+
                 <h2>All Rooms</h2>
                 <table class="tableAdmin" id="roomsTable">
                     <thead>

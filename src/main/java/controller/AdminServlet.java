@@ -1,6 +1,7 @@
 package controller;
 
 import jakarta.servlet.ServletException;
+import jakarta.servlet.http.HttpSession;
 import model.rooms.Room;
 import service.RoomService;
 
@@ -20,16 +21,27 @@ public class AdminServlet extends HttpServlet {
   @Override
   protected void doGet(HttpServletRequest req, HttpServletResponse resp) throws ServletException, IOException {
 
+      HttpSession session = req.getSession();
+
+
     User user = (User) req.getSession(false).getAttribute("user");
     if (user == null || !user.isAdmin()) {
       resp.sendError(HttpServletResponse.SC_FORBIDDEN);
       return;
     }
 
+    // flash of success
     String flash = (String) req.getSession().getAttribute("flash");
     if (flash != null) {
       req.setAttribute("flash", flash);
       req.getSession().removeAttribute("flash");
+    }
+
+    // flash of error
+    String flashError = (String) session.getAttribute("flash_error");
+    if (flashError != null) {
+      req.setAttribute("flash_error", flashError);
+      session.removeAttribute("flash_error");
     }
 
     try {
