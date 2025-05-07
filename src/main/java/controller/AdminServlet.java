@@ -11,6 +11,7 @@ import jakarta.servlet.http.HttpServletResponse;
 import java.io.IOException;
 import java.sql.SQLException;
 import java.util.List;
+import model.users.User;
 
 @WebServlet("/admin")
 public class AdminServlet extends HttpServlet {
@@ -18,6 +19,13 @@ public class AdminServlet extends HttpServlet {
 
   @Override
   protected void doGet(HttpServletRequest req, HttpServletResponse resp) throws ServletException, IOException {
+
+    User user = (User) req.getSession(false).getAttribute("user");
+    if (user == null || !user.isAdmin()) {
+      resp.sendError(HttpServletResponse.SC_FORBIDDEN);
+      return;
+    }
+
     String flash = (String) req.getSession().getAttribute("flash");
     if (flash != null) {
       req.setAttribute("flash", flash);

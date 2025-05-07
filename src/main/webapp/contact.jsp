@@ -18,6 +18,8 @@
             <li><a href="rooms.jsp">Rooms</a></li>
             <li><a href="booking.jsp">Book Now</a></li>
             <li><a href="contact.jsp" class="active">Contact</a></li>
+            <%@ include file="/WEB-INF/fragments/nav.jspf" %>
+
         </ul>
         <ul class="nav-auth">
             <%

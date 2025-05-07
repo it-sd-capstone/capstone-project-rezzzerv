@@ -1,0 +1,10 @@
+<%@ page contentType="text/html; charset=UTF-8" %>
+<%@ page import="model.users.User" %>
+<%
+    User u = (User) session.getAttribute("user");
+    if (u != null && u.isAdmin()) {
+%>
+<li>
+    <a href="<%= request.getContextPath() %>/admin">Admin Dashboard</a>
+</li>
+<% } %>

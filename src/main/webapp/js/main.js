@@ -32,22 +32,6 @@ document.addEventListener('DOMContentLoaded', () => {
         }
     }
 
-    // Hardcoded for now
-    const isAdmin = true;
-
-    // This will eventually replace the hardcoded value above
-    // const isAdmin = sessionStorage.getItem('isAdmin') === 'true';
-
-    if (isAdmin) {
-        const nav = document.querySelector('.nav-main');
-        const li = document.createElement('li');
-        const adminLink = document.createElement('a');
-        adminLink.href = 'admin';
-        adminLink.textContent = 'Admin Dashboard';
-        li.appendChild(adminLink)
-        nav.appendChild(li);
-    }
-
     // Utility function for validation forms
     function toggleValidClass(input, isValid) {
         const wrapper = input.parentElement;

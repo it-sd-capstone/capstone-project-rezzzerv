@@ -18,4 +18,9 @@ public class Administrator extends User {
     public boolean maxReservation() {
         return true;
     }
+
+    @Override
+    public boolean isAdmin() {
+        return true;
+    }
 }

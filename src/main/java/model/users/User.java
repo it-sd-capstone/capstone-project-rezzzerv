@@ -30,6 +30,10 @@ public abstract class User {
         this.reserves = reserves;
     }
 
+    public boolean isAdmin() {
+        return false;
+    }
+
     public Long getId() {
         return id;
     }

@@ -21,6 +21,7 @@
                     <li><a href="rooms.jsp">Rooms</a></li>
                     <li><a href="booking.jsp">Book Now</a></li>
                     <li><a href="contact.jsp">Contact</a></li>
+                    <%@ include file="/WEB-INF/fragments/nav.jspf" %>
                 </ul>
                 <ul class="nav-auth">
                     <%
@@ -41,6 +42,13 @@
                 </ul>
             </nav>
         </header>
+        <div class="room-stats">
+            <ul>
+                <li>Total rooms: ${totalRooms}</li>
+                <li>Available now: ${availableRooms}</li>
+            </ul>
+        </div>
+
         <h1>Admin Dashboard - Manage Rooms</h1>
         <button id="addRoomBtn" class="btnPrimaryAdmin">Add New Room</button>
         <div id="roomFormContainer" class="adminContainer">
