@@ -38,6 +38,12 @@ public class RegistrationServlet extends HttpServlet {
             return;
         }
 
+        // Check if email already exists
+        if (userService.findUserByEmail(email) != null) {
+            response.sendRedirect("register.jsp?error=EmailAlreadyExists");
+            return;
+        }
+
         Customer customer = new Customer();
         customer.setName(name);
         customer.setLastName(lastName);

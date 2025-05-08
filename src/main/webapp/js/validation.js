@@ -102,8 +102,46 @@ if (registerForm && registerBtn) {
     const confirmPasswordInput = document.getElementById('confirm-password');
     const errorContainer = document.getElementById('password-errors');
     const strengthBar = document.getElementById('strength-bar');
+    const formError = document.getElementById('form-error');
+    let emailTaken = false;
+    let emailCheckTimeout;
 
     const emailRegex = /^[^\s@]+@[^\s@]+\.[^\s@]+$/;
+
+    // Live Email Check
+    emailInput.addEventListener('input', function() {
+        clearTimeout(emailCheckTimeout); // reset the 300ms timer if still typing
+
+        const email = emailInput.value.trim();
+
+        emailCheckTimeout = setTimeout(() => {
+            if (email.length > 5) {
+                fetch(`check-email?email=${encodeURIComponent(email)}`)
+                    .then(response => response.json())
+                    .then(data => {
+                        if (data.exists) {
+                            emailTaken = true;
+                            formError.style.display = "block";
+                            formError.textContent = "This email is already registered. Please login or use a different email.";
+                        } else {
+                            emailTaken = false;
+                            formError.style.display = "none";
+                        }
+
+                        // Re-validate after fetch response
+                        validateForm();
+                        
+                    })
+                    .catch(error => {
+                        console.error('Error checking email:', error);
+                    });
+            } else {
+                emailTaken = false;
+                formError.style.display = "none";
+                validateForm();
+            }
+        }, 300);
+    });
 
     function validateForm() {
         const isNameValid = nameInput.value.trim().length >= 2;
@@ -116,11 +154,11 @@ if (registerForm && registerBtn) {
         toggleValidClass(nameInput, isNameValid);
         toggleValidClass(lastNameInput, isLastNameValid);
         toggleValidClass(phoneInput, isPhoneValid);
-        toggleValidClass(emailInput, isEmailValid);
+        toggleValidClass(emailInput, isEmailValid && !emailTaken);
         toggleValidClass(passwordInput, isPasswordValid);
         toggleValidClass(confirmPasswordInput, isPasswordMatch);
 
-        const isFormValid = isNameValid && isLastNameValid && isPhoneValid && isEmailValid && isPasswordValid && isPasswordMatch;
+        const isFormValid = isNameValid && isLastNameValid && isPhoneValid && isEmailValid && isPasswordValid && isPasswordMatch && !emailTaken;
         registerBtn.disabled = !isFormValid;
         registerBtn.classList.toggle('enabled', isFormValid);
     }

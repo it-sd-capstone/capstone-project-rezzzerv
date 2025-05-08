@@ -28,6 +28,7 @@
 <main>
   <section class="auth-container">
     <h1 class="auth-title">Create an Account</h1>
+
     <form action="register" method="POST" class="auth-form" id="register-form">
       <div class="input-wrapper">
         <input type="text" id="name" name="name" placeholder="Name" required>
@@ -38,6 +39,7 @@
       <div class="input-wrapper">
         <input type="email" id="email" name="email" placeholder="Email" required>
       </div>
+      <div id="form-error" class="error-banner" style="display: none;"></div>
       <div class="input-wrapper">
         <input type="text" id="phone" name="phone" placeholder="Phone" required>
       </div>

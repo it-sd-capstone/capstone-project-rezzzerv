@@ -33,6 +33,10 @@ public class UserService {
 
     }
 
+    public User findUserByEmail(String email) {
+        return new UserDao().findByEmail(email);
+    }
+
     // we can add another methods here for...
     // login
     // update profile

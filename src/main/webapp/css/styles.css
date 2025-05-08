@@ -629,10 +629,15 @@ footer {
 }
 
 /* Registration verification error messages */
-.error-messages {
-    margin-top: 10px;
-    font-size: 0.9em;
-    color: red;
+.error-banner {
+    background-color: #f5f0ff; /* light purple background */
+    color: #7a51c0; /* strong purple text */
+    border: 1px solid #8860d0;
+    padding: 0.8rem 1rem;
+    margin-bottom: 1rem;
+    border-radius: 8px;
+    font-size: 0.95em;
+    text-align: center;
 }
 
 /* Password Strength Bar */
