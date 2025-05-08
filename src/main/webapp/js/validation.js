@@ -76,3 +76,188 @@ document.addEventListener('DOMContentLoaded', () => {
     initDigitsOnly(editRoomNumber);
     initMoneyField(editRoomPrice);
 });
+
+
+// Utility function for validation forms
+function toggleValidClass(input, isValid) {
+    const wrapper = input.parentElement;
+    if (isValid) {
+        wrapper.classList.add('valid');
+    } else {
+        wrapper.classList.remove('valid');
+    }
+}
+
+
+// Register Form Validation
+const registerForm = document.getElementById('register-form');
+const registerBtn = document.getElementById('register-btn');
+
+if (registerForm && registerBtn) {
+    const nameInput = document.getElementById('name');
+    const lastNameInput = document.getElementById('lastName');
+    const emailInput = document.getElementById('email');
+    const phoneInput = document.getElementById('phone');
+    const passwordInput = document.getElementById('password');
+    const confirmPasswordInput = document.getElementById('confirm-password');
+    const errorContainer = document.getElementById('password-errors');
+    const strengthBar = document.getElementById('strength-bar');
+
+    const emailRegex = /^[^\s@]+@[^\s@]+\.[^\s@]+$/;
+
+    function validateForm() {
+        const isNameValid = nameInput.value.trim().length >= 2;
+        const isLastNameValid = lastNameInput.value.trim().length >= 2;
+        const isPhoneValid = phoneInput.value.trim().length >= 10;
+        const isEmailValid = emailRegex.test(emailInput.value.trim());
+        const isPasswordValid = validatePassword(passwordInput.value, false);
+        const isPasswordMatch = passwordInput.value === confirmPasswordInput.value && passwordInput.value.length > 0;
+
+        toggleValidClass(nameInput, isNameValid);
+        toggleValidClass(lastNameInput, isLastNameValid);
+        toggleValidClass(phoneInput, isPhoneValid);
+        toggleValidClass(emailInput, isEmailValid);
+        toggleValidClass(passwordInput, isPasswordValid);
+        toggleValidClass(confirmPasswordInput, isPasswordMatch);
+
+        const isFormValid = isNameValid && isLastNameValid && isPhoneValid && isEmailValid && isPasswordValid && isPasswordMatch;
+        registerBtn.disabled = !isFormValid;
+        registerBtn.classList.toggle('enabled', isFormValid);
+    }
+
+    function validatePassword(password, showErrors = true) {
+        const errors = [];
+
+        const ruleLength = document.getElementById('rule-length');
+        const ruleLowercase = document.getElementById('rule-lowercase');
+        const ruleUppercase = document.getElementById('rule-uppercase');
+        const ruleNumber = document.getElementById('rule-number');
+        const ruleSpecial = document.getElementById('rule-special');
+
+        // Check individual rules
+        const hasLength = password.length >= 8;
+        const hasLowercase = /[a-z]/.test(password);
+        const hasUppercase = /[A-Z]/.test(password);
+        const hasNumber = /[0-9]/.test(password);
+        const hasSpecial = /[!@#$%^&*(),.?\":{}|<>]/.test(password);
+
+        // Update rule indicators
+        toggleRule(ruleLength, hasLength);
+        toggleRule(ruleLowercase, hasLowercase);
+        toggleRule(ruleUppercase, hasUppercase);
+        toggleRule(ruleNumber, hasNumber);
+        toggleRule(ruleSpecial, hasSpecial);
+
+        if (!hasLength) {
+            errors.push("Password must be at least 8 characters long.");
+        }
+        if (!hasLowercase) {
+            errors.push("Must contain at least one lowercase letter.");
+        }
+        if (!hasUppercase) {
+            errors.push("Must contain at least one uppercase letter.");
+        }
+        if (!hasNumber) {
+            errors.push("Must contain at least one number (0-9).");
+        }
+        if (!hasSpecial) {
+            errors.push("Must contain at least one special character.");
+        }
+
+        if (showErrors) {
+            displayErrors(errors);
+        }
+
+        updateStrengthBar(password);
+
+        return errors.length === 0;
+    }
+
+    function toggleRule(element, isValid) {
+        if (isValid) {
+            element.classList.add('valid');
+        } else {
+            element.classList.remove('valid');
+        }
+    }
+
+    function displayErrors(errors) {
+        if (errors.length > 0) {
+            errorContainer.innerHTML = "<ul><li>" + errors.join("</li><li>") + "</li></ul>";
+        } else {
+            errorContainer.innerHTML = "";
+        }
+    }
+
+    function updateStrengthBar(password) {
+        let strength = 0;
+
+        if (password.length >= 8) strength++;
+        if (/[a-z]/.test(password)) strength++;
+        if (/[A-Z]/.test(password)) strength++;
+        if (/[0-9]/.test(password)) strength++;
+        if (/[!@#$%^&*(),.?\":{}|<>]/.test(password)) strength++;
+
+        strengthBar.style.backgroundColor = "#7a51c0";
+
+        if (strength === 0) {
+            strengthBar.style.width = "0%";
+        } else if (strength <= 2) {
+            strengthBar.style.width = "10%";
+        } else if (strength <= 3) {
+            strengthBar.style.width = "40%";
+        } else if (strength <= 4) {
+            strengthBar.style.width = "70%";
+        } else if (strength === 5) {
+            strengthBar.style.width = "100%";
+        }
+    }
+
+    nameInput.addEventListener('input', validateForm);
+    lastNameInput.addEventListener('input', validateForm);
+    phoneInput.addEventListener('input', validateForm);
+    emailInput.addEventListener('input', validateForm);
+    passwordInput.addEventListener('input', validateForm);
+    confirmPasswordInput.addEventListener('input', validateForm);
+}
+
+
+// Login Form Validation
+const loginForm = document.getElementById('login-form');
+const loginBtn = document.getElementById('login-btn');
+
+if (loginForm && loginBtn) {
+    const loginEmailInput = document.getElementById('login-email');
+    const loginPasswordInput = document.getElementById('login-password');
+
+    const emailRegex = /^[^\s@]+@[^\s@]+\.[^\s@]+$/;
+
+    function validateLoginForm() {
+        const isEmailValid = emailRegex.test(loginEmailInput.value.trim());
+        const isPasswordFilled = loginPasswordInput.value.trim().length >= 8;
+
+        const isLoginValid = isEmailValid && isPasswordFilled;
+
+        loginBtn.disabled = !isLoginValid;
+        loginBtn.classList.toggle('enabled', isLoginValid);
+    }
+
+    loginEmailInput.addEventListener('input', validateLoginForm);
+    loginPasswordInput.addEventListener('input', validateLoginForm);
+}
+
+// Password visibility toggle
+document.addEventListener('DOMContentLoaded', function () {
+    const togglePasswordBtn = document.getElementById('toggle-password');
+    const passwordInput = document.getElementById('password');
+
+    if (togglePasswordBtn && passwordInput) {
+        togglePasswordBtn.addEventListener('click', function () {
+            const type = passwordInput.getAttribute('type') === 'password' ? 'text' : 'password';
+            passwordInput.setAttribute('type', type);
+
+            // Update the show password button text
+            togglePasswordBtn.textContent = type === 'password' ? 'Show' : 'Hide';
+        });
+    }
+});

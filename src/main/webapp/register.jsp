@@ -41,12 +41,32 @@
       <div class="input-wrapper">
         <input type="text" id="phone" name="phone" placeholder="Phone" required>
       </div>
+
       <div class="input-wrapper">
-        <input type="password" id="password" name="password" placeholder="Password" required>
+        <div class="password-field">
+          <input type="password" id="password" name="password" placeholder="Password" required>
+          <button type="button" id="toggle-password" class="toggle-password-text">Show</button>
+        </div>
+
+        <div id="password-strength">
+          <div id="strength-bar"></div>
+        </div>
+
+        <ul id="password-rules" class="password-rules">
+          <li id="rule-length">At least 8 characters</li>
+          <li id="rule-lowercase">At least one lowercase letter</li>
+          <li id="rule-uppercase">At least one uppercase letter</li>
+          <li id="rule-number">At least one number (0-9)</li>
+          <li id="rule-special">At least one special character (!@#$%^&*)</li>
+        </ul>
       </div>
+
       <div class="input-wrapper">
         <input type="password" id="confirm-password" name="confirm-password" placeholder="Confirm Password" required>
       </div>
+
+      <div id="password-errors" class="error-messages"></div>
+
       <button type="submit" class="btn auth-btn" id="register-btn">Register</button>
     </form>
 
@@ -61,5 +81,6 @@
 </footer>
 
 <script src="js/main.js"></script>
+<script src="js/validation.js"></script>
 </body>
 </html>
