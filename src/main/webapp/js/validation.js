@@ -130,7 +130,7 @@ if (registerForm && registerBtn) {
 
                         // Re-validate after fetch response
                         validateForm();
-                        
+
                     })
                     .catch(error => {
                         console.error('Error checking email:', error);
@@ -267,17 +267,19 @@ const loginBtn = document.getElementById('login-btn');
 if (loginForm && loginBtn) {
     const loginEmailInput = document.getElementById('login-email');
     const loginPasswordInput = document.getElementById('login-password');
-
     const emailRegex = /^[^\s@]+@[^\s@]+\.[^\s@]+$/;
 
     function validateLoginForm() {
         const isEmailValid = emailRegex.test(loginEmailInput.value.trim());
-        const isPasswordFilled = loginPasswordInput.value.trim().length >= 8;
+        const isPasswordValid = loginPasswordInput.value.trim().length >= 8;
 
-        const isLoginValid = isEmailValid && isPasswordFilled;
+        const isLoginFormValid = isEmailValid && isPasswordValid;
 
-        loginBtn.disabled = !isLoginValid;
-        loginBtn.classList.toggle('enabled', isLoginValid);
+        loginBtn.disabled = !isLoginFormValid;
+        loginBtn.classList.toggle('enabled', isLoginFormValid);
+
+        toggleValidClass(loginEmailInput, isEmailValid);
+        toggleValidClass(loginPasswordInput, isPasswordValid);
     }
 
     loginEmailInput.addEventListener('input', validateLoginForm);

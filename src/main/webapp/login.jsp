@@ -35,6 +35,11 @@
             <div class="input-wrapper">
                 <input type="password" id="login-password" name="password" placeholder="Password" required>
             </div>
+
+            <div id="login-error" class="error-banner" style="<%= (request.getAttribute("error") != null) ? "" : "display: none;" %>">
+                <%= (request.getAttribute("error") != null) ? request.getAttribute("error") : "" %>
+            </div>
+
             <button type="submit" class="btn auth-btn" id="login-btn" disabled>Log in</button>
         </form>
         <p class="auth-link">
