@@ -36,4 +36,8 @@ public class PaymentService {
 
         return payment;
     }
+
+    public Reserve getReserveById(Long id){
+       return reserveDao.getReserveById(id);
+    }
 }

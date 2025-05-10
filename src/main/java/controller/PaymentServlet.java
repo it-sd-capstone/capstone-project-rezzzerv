@@ -8,13 +8,15 @@ import jakarta.servlet.http.HttpServletResponse;
 import jakarta.servlet.http.HttpSession;
 import model.payment.Payment;
 import model.reserve.Reserve;
+import model.rooms.Room;
 import service.PaymentService;
 
 import java.io.IOException;
 import java.time.LocalDate;
 import java.time.format.DateTimeFormatter;
+import java.time.temporal.ChronoUnit;
 
-@WebServlet("/processPayment")
+@WebServlet(urlPatterns = {"/processPayment", "/completePayment"})
 public class PaymentServlet extends HttpServlet {
 
     private PaymentService paymentService;
@@ -87,4 +89,59 @@ public class PaymentServlet extends HttpServlet {
 //            response.sendRedirect("reservationConfirmation.jsp");
 //        }
     }
+
+
+    //new doget for pay reservation from Pay bottom in myaccount.jsp
+    @Override
+    protected void doGet(HttpServletRequest request, HttpServletResponse response)
+            throws ServletException, IOException {
+
+        HttpSession session = request.getSession();
+
+
+        String idParam = request.getParameter("id");
+        if (idParam == null) {
+            response.sendRedirect("myaccount.jsp"); // or an error page
+            return;
+        }
+
+        Long reserveId;
+        try {
+            reserveId = Long.parseLong(idParam);
+        } catch (NumberFormatException e) {
+            response.sendRedirect("myaccount.jsp");
+            return;
+        }
+
+        // search reserve by id
+        Reserve reserve = paymentService.getReserveById(reserveId);
+        if (reserve == null) {
+            response.sendRedirect("myaccount.jsp");
+            return;
+        }
+
+        Room room = reserve.getRoom();
+
+        // do the math here for now.
+        Double roomRate = room.getPrice();
+        long nights = ChronoUnit.DAYS.between(reserve.getCheckIn(), reserve.getCheckOut());
+        if (nights <= 0) nights = 1;
+
+        Double totalPrice = roomRate * nights;
+
+
+        // save the reserve and get the attributes
+        session.setAttribute("reserve", reserve);
+        session.setAttribute("roomType", room.getType());
+        session.setAttribute("roomNumber", room.getRoomNumber());
+        session.setAttribute("roomPrice", room.getPrice());
+        session.setAttribute("nights", nights);
+        session.setAttribute("totalPrice", totalPrice);
+
+        //System.out.println(reserve);
+
+        // redirect to payment form
+        response.sendRedirect("payment.jsp");
+    }
+
 }
