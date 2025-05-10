@@ -149,7 +149,7 @@
                     </select>
                 </div>
                 <div class="form-actions">
-                    <a href="booking.jsp" class="btn-secondary">Back</a>
+                    <a href="myaccount.jsp" class="btn-secondary">My Reservations</a>
                     <button type="submit" class="btn-primary">Complete Payment</button>
                 </div>
             </form>
