@@ -126,8 +126,29 @@ document.addEventListener('DOMContentLoaded', function() {
         }
     }
 
-    // Initialize with first room selected
-    if (roomOptions.length > 0) {
+    // Check for room parameter in URL
+    function getRoomFromUrl() {
+        const urlParams = new URLSearchParams(window.location.search);
+        const roomParam = urlParams.get('room');
+
+        // Map URL parameter values to room types
+        const roomMapping = {
+            'basic': 'Basic',
+            'premium': 'Premium',
+            'presidential': 'Presidential'
+        };
+
+        // Return the mapped room type or null if not found
+        return roomParam && roomMapping[roomParam] ? roomMapping[roomParam] : null;
+    }
+
+    // Get room from URL if available
+    const roomFromUrl = getRoomFromUrl();
+
+    // Initialize with room from URL or first room if no URL parameter
+    if (roomFromUrl) {
+        selectRoom(roomFromUrl);
+    } else if (roomOptions.length > 0) {
         const firstRoomType = roomOptions[0].getAttribute('data-room-type');
         selectRoom(firstRoomType);
     }

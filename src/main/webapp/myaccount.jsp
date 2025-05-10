@@ -159,17 +159,17 @@
                     <td class="<%= statusClass %>"><%= reservation.getStatus() %></td>
                     <td>
                         <%
-                            // Always show cancel button regardless of status
-                            // This addresses the issue where buttons weren't showing up
+                            // Only show cancel button if the reservation is not cancelled
+                            if (!reservation.getStatus().toLowerCase().contains("cancelled")) {
                         %>
                         <a href="cancelReservation?id=<%= reservation.getId() %>" class="btn-cancel"
                            onclick="return confirm('Are you sure you want to cancel this reservation?')">
                             Cancel
                         </a>
-
                         <%
+                            }
                             // If status contains "Pending", also show the payment button
-                            if (reservation.getStatus().contains("Pending") || reservation.getStatus().contains("pending")) {
+                            if (reservation.getStatus().toLowerCase().contains("pending")) {
                         %>
                         <a href="completePayment?id=<%= reservation.getId() %>" class="btn-payment">
                             Pay

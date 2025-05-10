@@ -49,18 +49,24 @@
     <a href="booking.jsp" class="btn">Book Now</a>
   </section>
   <section class="features">
-    <div class="feature">
-      <h2>Luxury Rooms</h2>
-      <p>Experience comfort like never before</p>
-    </div>
-    <div class="feature">
-      <h2>Prime Location</h2>
-      <p>Situated in the heart of the city</p>
-    </div>
-    <div class="feature">
-      <h2>24/7 Service</h2>
-      <p>Our staff is always at your service</p>
-    </div>
+    <a href="rooms.jsp" class="feature-link">
+      <div class="feature">
+        <h2>Luxury Rooms</h2>
+        <p>Experience comfort like never before</p>
+      </div>
+    </a>
+    <a href="https://www.google.com/maps/place/123+Wisconsin+St,+Eau+Claire,+WI+54703/@44.8151996,-91.5063688,17z/data=!3m1!4b1!4m5!3m4!1s0x87f8bd6cff387963:0xd452c826e38018a6!8m2!3d44.8151996!4d-91.5037992?authuser=0&entry=ttu&g_ep=EgoyMDI1MDUwNy4wIKXMDSoASAFQAw%3D%3D" target="_blank" class="feature-link">
+      <div class="feature">
+        <h2>Prime Location</h2>
+        <p>Situated in the heart of the city</p>
+      </div>
+    </a>
+    <a href="contact.jsp" class="feature-link">
+      <div class="feature">
+        <h2>24/7 Service</h2>
+        <p>Our staff is always at your service</p>
+      </div>
+    </a>
   </section>
 </main>
 
