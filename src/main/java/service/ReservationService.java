@@ -124,6 +124,12 @@ public class ReservationService {
                 return false;
             }
 
+            LocalDate currentDate = LocalDate.now();
+            if (reserve.getCheckIn().isBefore(currentDate)){
+                // it won't cancel the reserve if the checkin is in the past
+                return false;
+            }
+
             // Update status to cancelled
             reserve.setStatus("Cancelled");
             reserveDao.updateReserve(reserve);
@@ -144,6 +150,10 @@ public class ReservationService {
 
     public List<Reserve> findReserveByRoomId(Long id){
         return reserveDao.getReservationsByRoomId(id);
+    }
+
+    public Reserve findReserveById(Long id){
+        return reserveDao.getReserveById(id);
     }
 
 }

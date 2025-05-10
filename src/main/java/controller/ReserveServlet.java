@@ -124,7 +124,7 @@ public class ReserveServlet extends HttpServlet {
             if (success) {
                 session.setAttribute("successMessage", "Reservation #" + reserveId + " has been successfully cancelled");
             } else {
-                session.setAttribute("errorMessage", "Failed to cancel reservation. You may not have permission or the reservation doesn't exist.");
+                session.setAttribute("errorMessage", "Failed to cancel reservation. Your check-in Date already started. send us an email for more info");
             }
 
             response.sendRedirect("myaccount.jsp");
