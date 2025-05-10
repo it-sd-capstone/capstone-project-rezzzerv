@@ -85,7 +85,8 @@
         }
         // Get user's reservations
         ReserveDao reserveDao = new ReserveDao();
-        List<Reserve> reservations = reserveDao.findReserveByUserId(user.getId());
+        List<Reserve> reservations = reserveDao.getUserReservations(user.getId());
+
         // Date formatter
         DateTimeFormatter dateFormatter = DateTimeFormatter.ofPattern("MMM dd, yyyy");
     %>
@@ -136,19 +137,19 @@
                     Room room = reservation.getRoom();
                     long nights = ChronoUnit.DAYS.between(reservation.getCheckIn(), reservation.getCheckOut());
                     double totalPrice = room.getPrice() * nights;
+
                     String statusClass = "";
+                    String statusLower = reservation.getStatus().toLowerCase();
 
-                    // Debug the status
-                    System.out.println("Reservation #" + reservation.getId() + " status: '" + reservation.getStatus() + "'");
-
-                    if (reservation.getStatus().contains("Confirmed") || reservation.getStatus().contains("confirmed")) {
+                    if (statusLower.contains("confirmed")) {
                         statusClass = "status-confirmed";
-                    } else if (reservation.getStatus().contains("Pending") || reservation.getStatus().contains("pending")) {
+                    } else if (statusLower.contains("pending")) {
                         statusClass = "status-pending";
-                    } else if (reservation.getStatus().contains("Cancelled") || reservation.getStatus().contains("cancelled")) {
+                    } else if (statusLower.contains("cancelled")) {
                         statusClass = "status-cancelled";
                     }
                 %>
+
                 <tr>
                     <td><%= reservation.getId() %></td>
                     <td><%= room.getType() %> (Room <%= room.getRoomNumber() %>)</td>

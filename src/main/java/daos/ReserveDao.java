@@ -100,6 +100,7 @@ public class ReserveDao {
                     list.add(mapRowToReserve(rs));
                 }
             }
+
         } catch (SQLException e) {
             System.out.println("Error retrieving reserves for user Id = " + userId);
             e.printStackTrace();
@@ -199,4 +200,60 @@ public class ReserveDao {
 
         return reservations;
     }
+
+    // New method specifically for retrieving user reservations
+    public List<Reserve> getUserReservations(Long userId) {
+        List<Reserve> reservations = new ArrayList<>();
+        String sql = "SELECT r.id, r.status, r.checkIn, r.checkOut, r.roomId " +
+                "FROM reserves r " +
+                "WHERE r.userId = ?";
+
+        try (Connection conn = DbConnection.getConnection();
+             PreparedStatement pstmt = conn.prepareStatement(sql)) {
+
+            pstmt.setLong(1, userId);
+            ResultSet rs = pstmt.executeQuery();
+
+            // First, collect all the basic reservation data and room IDs
+            List<Long> roomIds = new ArrayList<>();
+            while (rs.next()) {
+                Reserve reserve = new Reserve();
+                reserve.setId(rs.getLong("id"));
+                reserve.setStatus(rs.getString("status"));
+                reserve.setCheckIn(rs.getObject("checkIn", LocalDate.class));
+                reserve.setCheckOut(rs.getObject("checkOut", LocalDate.class));
+
+                // Store the room ID for later
+                Long roomId = rs.getLong("roomId");
+                roomIds.add(roomId);
+
+                // Add to our list
+                reservations.add(reserve);
+            }
+            rs.close();
+
+            // Get the user once
+            User user = userDao.getUserById(userId);
+
+            // Now get all the rooms individually
+            for (int i = 0; i < reservations.size(); i++) {
+                Reserve reserve = reservations.get(i);
+                Long roomId = roomIds.get(i);
+
+                // Get the room using the existing method
+                Room room = roomDao.getRoomById(roomId);
+
+                // Set the user and room for the reservation
+                reserve.setUser(user);
+                reserve.setRoom(room);
+            }
+
+        } catch (SQLException e) {
+            System.out.println("Error retrieving reservations for user ID = " + userId);
+            e.printStackTrace();
+        }
+
+        return reservations;
+    }
+
 }
