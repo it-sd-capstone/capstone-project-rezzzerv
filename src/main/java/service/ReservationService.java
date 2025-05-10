@@ -139,6 +139,11 @@ public class ReservationService {
             e.printStackTrace();
             return false;
         }
+
+    }
+
+    public List<Reserve> findReserveByRoomId(Long id){
+        return reserveDao.getReservationsByRoomId(id);
     }
 
 }

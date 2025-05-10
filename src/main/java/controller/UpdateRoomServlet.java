@@ -8,7 +8,10 @@ import jakarta.servlet.http.HttpServletResponse;
 
 import java.io.IOException;
 import java.sql.SQLException;
+import java.util.List;
 
+import model.reserve.Reserve;
+import service.ReservationService;
 import service.RoomService;
 import model.rooms.Room;
 import model.rooms.RoomConstruction;
@@ -16,6 +19,7 @@ import model.rooms.RoomConstruction;
   @WebServlet("/updateRoom")
   public class UpdateRoomServlet extends HttpServlet {
     private final RoomService roomService = new RoomService();
+    private final ReservationService reservationService = new ReservationService();
 
   @Override
   protected void doPost(HttpServletRequest req, HttpServletResponse resp)
@@ -30,9 +34,17 @@ import model.rooms.RoomConstruction;
     Room room = RoomConstruction.createRoom(type, id, roomNumber, available, price);
 
     try {
-      roomService.updateRoom(room);
-      req.getSession().setAttribute("flash", "Room “" + roomNumber + "” updated successfully.");
-      resp.sendRedirect("admin");
+
+      List<Reserve> reserve = reservationService.findReserveByRoomId(id);
+
+      if (reserve == null || reserve.isEmpty()){
+        roomService.updateRoom(room);
+        req.getSession().setAttribute("flash", "Room “" + roomNumber + "” updated successfully.");
+        resp.sendRedirect("admin");
+      }else {
+        req.getSession().setAttribute("flash_error", "Room can't be updated while it's reserved.");
+        resp.sendRedirect("admin");
+      }
     } catch (SQLException e) {
       throw new ServletException("Error updating room", e);
     }
