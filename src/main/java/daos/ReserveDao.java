@@ -256,4 +256,33 @@ public class ReserveDao {
         return reservations;
     }
 
-}
+    public List<Reserve> findAllWithFk() {
+        List<Reserve> list = new ArrayList<>();
+        String sql = "SELECT * FROM reserves";
+
+        try (Connection conn = DbConnection.getConnection();
+             Statement stmt = conn.createStatement();
+             ResultSet rs = stmt.executeQuery(sql)) {
+            while (rs.next()) {
+                Reserve r = new Reserve();
+                r.setId(rs.getLong("id"));
+                r.setStatus(rs.getString("status"));
+                r.setCheckIn(rs.getObject("checkIn",  LocalDate.class));
+                r.setCheckOut(rs.getObject("checkOut", LocalDate.class));
+
+                r.setUserId(rs.getLong("userId"));
+                r.setRoomId(rs.getLong("roomId"));
+                list.add(r);
+            }
+        } catch (SQLException e) {
+            System.out.println("Error in findAllWithFkHydration");
+            e.printStackTrace();
+        }
+
+        for (Reserve r : list) {
+            r.setUser( new UserDao().getUserById(r.getUserId()) );
+            r.setRoom( new RoomDao().getRoomById(r.getRoomId()) );
+        }
+        return list;
+        }
+    }

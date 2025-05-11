@@ -3,6 +3,8 @@ package service;
 import daos.UserDao;
 import model.users.User;
 
+import java.util.List;
+
 public class UserService {
 
     private UserDao userDao;
@@ -37,9 +39,21 @@ public class UserService {
         return new UserDao().findByEmail(email);
     }
 
+    public List<User> getAllUsers() {
+        return userDao.getAllUsers();
+    }
+
+    public void updateUser(User user) {
+        userDao.updateUser(user);
+    }
+    public void deleteUser(Long id) {
+        userDao.deleteUser(id);
+    }
+
     // we can add another methods here for...
     // login
     // update profile
     // delete account
     // and others
+
 }

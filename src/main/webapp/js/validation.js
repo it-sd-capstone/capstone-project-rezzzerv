@@ -5,6 +5,19 @@ function pulseRed(input) {
     }, { once: true });
 }
 
+function showValidationMessage(field, message) {
+
+    let existing = field.parentNode.querySelector('.validation-msg');
+    if (existing) existing.remove();
+
+    const msg = document.createElement('div');
+    msg.className = 'validation-msg';
+    msg.textContent = message;
+    field.parentNode.appendChild(msg);
+
+    setTimeout(() => msg.remove(), 2000);
+}
+
 function restrictToDigits(e) {
     if (!/^\d$/.test(e.key)) {
         e.preventDefault();
@@ -42,9 +55,25 @@ function restrictMoneyInput(e) {
     pulseRed(tgt);
 }
 
+function restrictToDigits(e) {
+    if (!/^\d$/.test(e.key)) {
+        e.preventDefault();
+        pulseRed(e.target);
+        showValidationMessage(e.target, 'Numbers only');
+    }
+}
+
 function initDigitsOnly(field) {
     if (!field) return;
     field.addEventListener('keypress', restrictToDigits);
+    field.addEventListener('input', () => {
+        const cleaned = field.value.replace(/\D/g, '');
+        if (cleaned !== field.value) {
+            field.value = cleaned;
+            pulseRed(field);
+            showValidationMessage(field, 'Numbers only');
+        }
+    });
 }
 
 function initMoneyField(field) {
@@ -63,6 +92,80 @@ function initMoneyField(field) {
     });
 }
 
+function initAlphaOnly(field) {
+    if (!field) return;
+    field.addEventListener('keypress', restrictAlphaInput);
+    field.addEventListener('input', () => {
+        const cleaned = field.value.replace(/[^A-Za-z ]/g, '');
+        if (cleaned !== field.value) field.value = cleaned;
+    });
+}
+
+function restrictAlphaInput(e) {
+    if (!/^[A-Za-z ]$/.test(e.key)) {
+        e.preventDefault();
+        pulseRed(e.target);
+        showValidationMessage(e.target, 'Letters only');
+    }
+}
+
+function restrictEmailInput(e) {
+    if (!/^[A-Za-z0-9@._+-]$/.test(e.key)) {
+        e.preventDefault();
+        pulseRed(e.target);
+        showValidationMessage(e.target, 'Letters, digits, @ . _ + - only');
+    }
+}
+
+function initEmailField(field) {
+    if (!field) return;
+
+    field.addEventListener('invalid', e => {
+        pulseRed(field);
+
+        const msg = field.value.trim() === ''
+            ? 'Must include an @ and a domain name (e.g. user@example.com)'
+            : 'Must include an @ and a domain name (e.g. user@example.com)';
+        showValidationMessage(field, msg);
+    });
+
+    field.addEventListener('keypress', restrictEmailInput);
+    field.addEventListener('input', () => {
+        field.setCustomValidity('');
+        let cleaned = field.value.replace(/[^A-Za-z0-9@._+-]/g, '');
+        if (cleaned !== field.value) {
+            field.value = cleaned;
+            pulseRed(field);
+            showValidationMessage(field, 'Must include an @ and a domain name (e.g. user@example.com)');
+        }
+    });
+
+    field.addEventListener('blur', () => {
+        if (field.value.trim() === '') return;
+        const re = /^[A-Za-z0-9]([A-Za-z0-9._%+-]{0,62}[A-Za-z0-9])?@[A-Za-z0-9]([A-Za-z0-9-]{0,61}[A-Za-z0-9])?(\.[A-Za-z]{2,})+$/;
+        if (!re.test(field.value)) {
+            pulseRed(field);
+            showValidationMessage(field, 'Must include an @ and a domain name (e.g. user@example.com)');
+        }
+    });
+}
+
+function initDateField(field) {
+    if (!field) return;
+    field.addEventListener('blur', () => {
+        if (field.value === '') {
+            field.setCustomValidity('');
+        } else {
+            if (!field.checkValidity()) {
+                field.setCustomValidity('Please enter a valid date');
+            } else {
+                field.setCustomValidity('');
+            }
+        }
+    });
+    field.addEventListener('input', () => field.setCustomValidity(''));
+}
+
 document.addEventListener('DOMContentLoaded', () => {
 
     const roomNumberField = document.getElementById('roomNumber');
@@ -75,8 +178,38 @@ document.addEventListener('DOMContentLoaded', () => {
     initMoneyField(roomPriceField);
     initDigitsOnly(editRoomNumber);
     initMoneyField(editRoomPrice);
-});
 
+    const firstNameField     = document.getElementById('firstName');
+    const lastNameField      = document.getElementById('lastName');
+    const phoneField         = document.getElementById('userPhone');
+    const emailField         = document.getElementById('userEmail');
+    const passwordField      = document.getElementById('userPassword');
+    const editFirstNameField = document.getElementById('editFirstName');
+    const editLastNameField  = document.getElementById('editLastName');
+    const editPhoneField     = document.getElementById('editUserPhone');
+    const editEmailField     = document.getElementById('editUserEmail');
+    const editPasswordField  = document.getElementById('editUserPassword');
+
+    initAlphaOnly(firstNameField);
+    initAlphaOnly(lastNameField);
+    initDigitsOnly(phoneField);
+    initEmailField(emailField);
+    initAlphaOnly(editFirstNameField);
+    initAlphaOnly(editLastNameField);
+    initDigitsOnly(editPhoneField);
+    initEmailField(editEmailField);
+
+    const editResStatusField = document.getElementById('editReservationStatus');
+    const editCheckinField   = document.getElementById('editReservationCheckin');
+    const editCheckoutField  = document.getElementById('editReservationCheckout');
+    const editUserIdField    = document.getElementById('editReservationUserId');
+    const editRoomIdField    = document.getElementById('editReservationRoomId');
+
+    initDateField(editCheckinField);
+    initDateField(editCheckoutField);
+    initDigitsOnly(editUserIdField);
+    initDigitsOnly(editRoomIdField);
+});
 
 // Utility function for validation forms
 function toggleValidClass(input, isValid) {
