@@ -6,7 +6,10 @@ import model.reserve.Reserve;
 import model.rooms.Room;
 import java.sql.SQLException;
 import model.rooms.RoomConstruction;
+
+import java.time.LocalDate;
 import java.util.List;
+import java.util.Map;
 
 public class RoomService {
 
@@ -65,4 +68,16 @@ public class RoomService {
         // if the room is not used yet then deleteO
         return roomDao.deleteRoom(roomId);
     }
+
+  public Object getTotalRoomCount() {
+    return null;
+  }
+
+  public Map<String, Long> getAvailableRoomCountByType(LocalDate start, LocalDate end) {
+    return null;
+  }
+
+  public Object getAvailableRoomCount() {
+    return null;
+  }
 }

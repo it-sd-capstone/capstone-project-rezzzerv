@@ -28,7 +28,7 @@ import model.rooms.RoomConstruction;
     Long id         = Long.parseLong(req.getParameter("roomId"));
     int roomNumber  = Integer.parseInt(req.getParameter("roomNumber"));
     String type     = req.getParameter("roomType");
-    double price    = Double.parseDouble(req.getParameter("roomPrice"));
+    double price    = Double.parseDouble(req.getParameter("price"));
     String availParam = req.getParameter("roomAvailable");
     boolean available = "1".equals(availParam);
     Room room = RoomConstruction.createRoom(type, id, roomNumber, available, price);

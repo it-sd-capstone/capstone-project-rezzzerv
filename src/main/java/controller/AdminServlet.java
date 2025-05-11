@@ -2,7 +2,9 @@ package controller;
 
 import jakarta.servlet.ServletException;
 import jakarta.servlet.http.HttpSession;
+import model.reserve.Reserve;
 import model.rooms.Room;
+import service.ReservationService;
 import service.RoomService;
 
 import jakarta.servlet.http.HttpServlet;
@@ -13,10 +15,13 @@ import java.io.IOException;
 import java.sql.SQLException;
 import java.util.List;
 import model.users.User;
+import service.UserService;
 
 @WebServlet("/admin")
 public class AdminServlet extends HttpServlet {
   private final RoomService roomService = new RoomService();
+  private final UserService userService = new UserService();
+  private final ReservationService reservationService = new ReservationService();
 
   @Override
   protected void doGet(HttpServletRequest req, HttpServletResponse resp) throws ServletException, IOException {
@@ -47,14 +52,18 @@ public class AdminServlet extends HttpServlet {
     try {
 
       List<Room> rooms = roomService.getAllRooms();
-
       req.setAttribute("rooms", rooms);
+
+      List<User> users = userService.getAllUsers();
+      req.setAttribute("users", users);
+
+      List<Reserve> reservations = reservationService.getAllReservations();
+      req.setAttribute("reservations", reservations);
 
       req.getRequestDispatcher("admin.jsp")
               .forward(req, resp);
-
     } catch (SQLException e) {
-      throw new ServletException("Unable to load rooms", e);
+      throw new ServletException("Unable to load tables", e);
     }
   }
 }

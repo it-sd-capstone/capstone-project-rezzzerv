@@ -156,4 +156,20 @@ public class ReservationService {
         return reserveDao.getReserveById(id);
     }
 
+    public List<Reserve> getAllReservations() {
+        return reserveDao.findAllWithFk();
+
+    }
+
+    public void updateReservation(Reserve reserve) {
+        reserveDao.updateReserve(reserve);
+    }
+    public void deleteReservation(Long id) {
+        reserveDao.deleteReserve(id);
+    }
+
+    public Reserve getReservationById(Long id) {
+        return reserveDao.getReserveById(id);
+    }
 }
+

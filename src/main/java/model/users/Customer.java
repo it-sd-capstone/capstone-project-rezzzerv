@@ -16,6 +16,11 @@ public class Customer extends User {
     }
 
     @Override
+    public String getUserType() {
+        return "Customer";
+    }
+
+    @Override
     public boolean maxReservation() {
         int capacity = 3;
         return getReserves().size() < capacity;

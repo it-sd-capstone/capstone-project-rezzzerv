@@ -92,6 +92,8 @@ public abstract class User {
 
     public abstract boolean maxReservation();
 
+    public abstract String getUserType();
+
     @Override
     public String toString() {
         return "User Id: "+ id + " name is " + name + " " +

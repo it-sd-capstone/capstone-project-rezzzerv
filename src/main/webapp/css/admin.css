@@ -11,13 +11,14 @@
     --shadowPurple:       rgba(136,96,208,0.2);
     --shadowPurpleMd:     rgba(136,96,208,0.3);
     --shadowPurpleAlt:    rgba(136,96,208,0.25);
+    --adminDanger:        #e53935;
 }
 
 
 .adminContainer {
     display: block;
-    transform: translateY(0);
-    transition: transform 0.2s ease-out, box-shadow 0.2s ease-out;
+    /*transform: translateY(0);*/
+    /*transition: transform 0.2s ease-out, box-shadow 0.2s ease-out;*/
     max-width: 900px;
     margin: 2rem auto;
     padding: 1.5rem;
@@ -28,10 +29,10 @@
     color: var(--colorText);
 }
 
-.adminContainer:hover {
-    transform: translateY(-4px);
-    box-shadow: 0 8px 16px var(--shadowPurple);
-}
+/*.adminContainer:hover {*/
+/*    transform: translateY(-4px);*/
+/*    box-shadow: 0 8px 16px var(--shadowPurple);*/
+/*}*/
 
 h1 {
     text-align: center;
@@ -70,7 +71,7 @@ h1 {
     margin-bottom: 1.5rem;
 }
 
-#roomFormContainer form {
+#roomFormContainer form, #userFormContainer form {
     display: grid;
     grid-template-columns: 140px 1fr;
     grid-column-gap: 1.5rem;
@@ -78,14 +79,14 @@ h1 {
     align-items: center;
 }
 
-#roomFormContainer label {
+#roomFormContainer label, #userFormContainer label {
     font-size: 1.1rem;
     font-weight: 600;
     justify-self: end;
 }
 
-#roomFormContainer input,
-#roomFormContainer select {
+#roomFormContainer input, #userFormContainer input,
+#roomFormContainer select, #userFormContainer select {
     font-size: 1rem;
     padding: 0.75rem;
     width: 100%;
@@ -93,12 +94,12 @@ h1 {
     border-radius: 4px;
 }
 
-#roomFormContainer .formGroup {
+#roomFormContainer .formGroup, #userFormContainer .formGroup {
     grid-column: 1 / -1;
     margin-bottom: 1rem;
 }
 
-#roomFormContainer .formGroup:last-child {
+#roomFormContainer .formGroup:last-child, #userFormContainer .formGroup:last-child {
     display: flex;
     gap: 0.5rem;
     justify-content: flex-end;
@@ -111,6 +112,14 @@ h1 {
 }
 
 #roomFormContainer.visible {
+    display: block;
+}
+
+#userFormContainer {
+    display: none;
+}
+
+#userFormContainer.visible {
     display: block;
 }
 
@@ -174,7 +183,7 @@ h1 {
     background: var(--colorBgLight);
 }
 
-#addRoomBtn {
+#addRoomBtn, #addUserBtn {
     display: block;
     background: var(--colorPrimary);
     color: var(--colorWhite);
@@ -188,11 +197,11 @@ h1 {
     margin: 1.5rem auto;
 }
 
-#addRoomBtn:hover:not(:disabled) {
+#addRoomBtn:hover:not(:disabled), #addUserBtn:hover:not(:disabled) {
     background: var(--colorPrimaryHover);
 }
 
-#addRoomBtn:disabled {
+#addRoomBtn:disabled, #addUserBtn:disabled {
     background: var(--colorPrimaryHover);
     opacity: 0.7;
     cursor: not-allowed;
@@ -221,7 +230,11 @@ h1 {
     overflow-y: auto;
 }
 
-#roomsListSection h2 {
+#usersSection .adminContainer {
+    max-width: 1100px;
+}
+
+#roomsListSection h2,  #usersListSection h2, #reservationsListSection h2{
     font-size: 1.75rem;
     color: var(--colorPrimary);
     margin: 1.5rem 0 1rem;
@@ -229,7 +242,7 @@ h1 {
     padding-bottom: 0.5rem;
 }
 
-#editModal {
+#editModal, #editUserModal, #editReservationModal {
     background: var(--colorWhite);
     padding: 1.5rem;
     border-radius: 0.5rem;
@@ -240,13 +253,13 @@ h1 {
     overflow-y: auto;
 }
 
-#editModal h2 {
+#editModal h2, #editUserModal h2, #editReservationModal h2 {
     font-size: 1.75rem;
     color: var(--colorPrimary);
     margin-bottom: 1.25rem;
 }
 
-#editModal form {
+#editModal form, #editUserModal form, #editReservationModal form {
     display: grid;
     grid-template-columns: 140px 1fr;
     grid-row-gap: 1rem;
@@ -254,14 +267,14 @@ h1 {
     align-items: center;
 }
 
-#editModal label {
+#editModal label, #editUserModal label, #editReservationModal label {
     font-size: 1.1rem;
     font-weight: 600;
     justify-self: end;
 }
 
-#editModal input,
-#editModal select {
+#editModal input, #editUserModal input, #editReservationModal input,
+#editModal select, #editUserModal select, #editReservationModal select {
     font-size: 1rem;
     padding: 0.75rem;
     width: 100%;
@@ -269,12 +282,12 @@ h1 {
     border-radius: 4px;
 }
 
-#editModal .formGroup {
+#editModal .formGroup, #editUserModal .formGroup, #editReservationModal .formGroup {
     grid-column: 1 / -1;
     margin-bottom: 1rem;
 }
 
-#editModal .formGroup:last-child {
+#editModal .formGroup:last-child, #editUserModal .formGroup:last-child, #editReservationModal .formGroup:last-child {
     display: flex;
     gap: 0.5rem;
     justify-content: start;
@@ -282,31 +295,31 @@ h1 {
     margin-top: 0.5rem;
 }
 
-#deleteModal .formGroup {
+#deleteModal .formGroup, #deleteUserModal .formGroup, #deleteReservationModal .formGroup {
     display: flex;
     gap: 0.5rem;
     justify-content: flex-end;
     margin-top: 1.5rem;
 }
 
-#deleteModal h2 {
+#deleteModal h2, #deleteUserModal h2, #deleteReservationModal h2 {
     font-size: 1.5rem;
     color: var(--colorPrimary);
     margin-bottom: 0.75rem;
 }
 
-#deleteModal p {
+#deleteModal p, #deleteUserModal p, #deleteReservationModal p {
     margin: 1rem 0 1.5rem;
     line-height: 1.4;
 }
 
-#deleteModal p strong {
+#deleteModal p strong, #deleteUserModal p strong, #deleteReservationModal p strong {
     margin: 0 0.25rem;
     font-weight: 600;
     color: var(--colorPrimary);
 }
 
-#deleteModal .btnPrimaryAdmin {
+#deleteModal .btnPrimaryAdmin, #deleteUserModal .btnPrimaryAdmin, #deleteReservationModal .btnPrimaryAdmin {
     margin-right: 0.5rem;
 }
 
@@ -371,6 +384,43 @@ h1 {
 
 }
 
+.manageContainer {
+    max-width: 300px;
+    margin: 1.5rem auto;
+    text-align: center;
+}
+
+#sectionSelect {
+    display: inline-block;
+    padding: 0.75rem 1rem;
+    font-size: 1rem;
+    font-weight: 600;
+    border: 1px solid var(--colorText);
+    border-radius: 4px;
+    background: var(--colorWhite);
+    color: var(--colorText);
+    cursor: pointer;
+    transition: border-color 0.2s, box-shadow 0.2s;
+}
+
+.manageContainer label strong {
+    display: inline-block;
+    font-size: 1.25rem;
+    color: var(--colorPrimary);
+    margin-right: 0.5rem;
+}
+
+#sectionSelect:hover,
+#sectionSelect:focus {
+    outline: none;
+    border-color: var(--colorPrimaryHover);
+    box-shadow: 0 0 0 3px rgba(136,96,208,0.15);
+}
+
+#sectionSelect option {
+    padding: 0.5rem;
+}
+
 .invalidPulse {
     border-color: var(--adminDanger);
     animation: pulseRed 0.6s ease-out;
@@ -381,7 +431,20 @@ h1 {
         box-shadow: 0 0 0 transparent;
     }
     50% {
-
         box-shadow: 0 0 16px 4px red;
     }
+}
+
+.validation-msg {
+    text-align: center;
+    margin-top: 0.25rem;
+    color: var(--adminDanger);
+    font-size: 0.875rem;
+    animation: fadeOut 2s forwards;
+}
+
+@keyframes fadeOut {
+    0%   { opacity: 1; }
+    80%  { opacity: 1; }
+    100% { opacity: 0; }
 }

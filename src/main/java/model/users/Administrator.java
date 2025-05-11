@@ -14,6 +14,10 @@ public class Administrator extends User {
         super(id, name, lastName, phone, email, password, reserves);
     }
 
+    public String getUserType() {
+        return "Administrator";
+    }
+    
     @Override
     public boolean maxReservation() {
         return true;
