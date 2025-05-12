@@ -89,7 +89,7 @@
                         </div>
                         <div class="formGroup">
                             <label for="price">Price Per Night:</label>
-                            <input type="text" id="price" name="price" readonly />
+                            <input type="text" id="price" name="roomPrice" readonly />
                         </div>
                         <div class="formGroup">
                             <button type="submit" class="btnPrimaryAdmin" id="submitRoom">Save Room</button>
