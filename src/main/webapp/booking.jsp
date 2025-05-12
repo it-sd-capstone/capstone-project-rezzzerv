@@ -195,7 +195,7 @@
                     </div>
                 </div>
 
-                <button type="submit" class="booking-btn">Save and Proceed to Payment</button>
+                <button type="submit" class="btn book-btn">Save and Proceed to Payment</button>
             </form>
         </div>
     </section>

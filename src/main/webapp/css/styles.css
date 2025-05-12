@@ -30,6 +30,17 @@ nav {
     margin: 0 auto;
 }
 
+.btn {
+    display: inline-block;
+    padding: 0.75rem;
+    font-size: 1rem;
+    border: 1px solid transparent;
+    border-radius: 8px;
+    text-align: center;
+    text-decoration: none;
+    transition: background-color 0.3s ease, border-color 0.3s ease;
+}
+
 .logo {
     font-size: 1.8rem;
     font-weight: bold;
@@ -114,7 +125,7 @@ main {
 }
 
 .hero .btn:hover {
-    background-color: #e0e0e0;
+    background-color: white;
     color: #7a51c0;
     transform: translateY(-2px);
     box-shadow: 0 4px 8px rgba(0, 0, 0, 0.3);
@@ -193,14 +204,17 @@ footer {
 }
 
 .register-link {
-    color: #8860d0;
+    background-color: #8860d0;
+    color: white;
     border: 1px solid #8860d0;
     border-radius: 4px;
+    cursor: pointer;
     padding: 0.3rem 0.8rem;
+    transition: background-color 0.3s ease, border-color 0.3s ease;
 }
 
 .register-link:hover {
-    background-color: #8860d0;
+    background-color: #7a51c0;
     color: white;
 }
 
@@ -329,18 +343,23 @@ footer {
 }
 
 .auth-btn {
-    margin-top: 1rem;
     width: 100%;
-    padding: 0.75rem;
-    font-size: 1rem;
     background-color: #eee;
-    border: 1px solid #999;
-    border-radius: 8px;
-    cursor: pointer;
+    cursor: not-allowed;
+    color: #999;
 }
 
-.auth-btn:hover {
-    background-color: #ddd;
+/* Enabled Button State */
+.auth-btn.enabled {
+    background-color: #8860d0;
+    color: white;
+    cursor: pointer;
+    border-color: #8860d0;
+}
+
+.auth-btn.enabled:hover {
+    background-color: #7a51c0;
+    border-color: #7a51c0;
 }
 
 .auth-link {
@@ -513,10 +532,17 @@ footer {
 }
 
 .book-btn {
-    margin-top: auto;
-    align-self: flex-start;
-    padding: 0.8rem 2.5rem;
-    font-size: 1.1rem;
+    width: 100%;
+    background-color: #8860d0;
+    color: white;
+    border: 1px solid #8860d0;
+    font-weight: bold;
+    cursor: pointer;
+}
+
+.book-btn:hover {
+    background-color: #7a51c0;
+    border-color: #7a51c0;
 }
 
 /* Responsive design - Mobile */
@@ -586,25 +612,6 @@ footer {
     .page-banner h1 {
         font-size: 2.2rem;
     }
-}
-
-
-/* Default Disabled Button */
-.auth-btn:disabled {
-    background-color: grey;
-    cursor: not-allowed;
-}
-
-/* Enabled Button State */
-.auth-btn.enabled {
-    background-color: #8860d0;
-    color: white;
-    cursor: pointer;
-    border: none;
-}
-
-.auth-btn.enabled:hover {
-    background-color: #7a51c0;
 }
 
 

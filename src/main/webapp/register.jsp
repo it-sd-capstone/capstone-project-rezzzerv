@@ -20,7 +20,7 @@
     </ul>
     <ul class="nav-auth">
       <li><a href="login.jsp" class="login-link">Login</a></li>
-      <li><a href="register.jsp" class="register-link active">Register</a></li>
+      <li><a href="register.jsp" class="register-link">Register</a></li>
     </ul>
   </nav>
 </header>
@@ -69,7 +69,7 @@
 
       <div id="password-errors" class="error-messages"></div>
 
-      <button type="submit" class="btn auth-btn" id="register-btn">Register</button>
+      <button type="submit" class="btn auth-btn" id="register-btn" disabled>Register</button>
     </form>
 
     <p class="auth-link">
