@@ -5,6 +5,37 @@ function pulseRed(input) {
     }, { once: true });
 }
 
+function toggleValidClass2(field, isValid) {
+    if (isValid) {
+        field.classList.add('valid');
+        field.classList.remove('invalidPulse');
+    } else {
+        field.classList.remove('valid');
+    }
+}
+
+function validateForm(form, rules) {
+    let allValid = true;
+
+    rules.forEach(({ field, test, message }) => {
+        const el  = form.querySelector(field);
+        const val = el.value.trim();
+
+        if (!test(val)) {
+            pulseRed(el);
+            showValidationMessage(el, message);
+            toggleValidClass2(el, false);
+            allValid = false;
+        } else {
+            const old = el.parentNode.querySelector('.validation-msg');
+            if (old) old.remove();
+            toggleValidClass2(el, true);
+        }
+    });
+
+    return allValid;
+}
+
 function showValidationMessage(field, message) {
 
     let existing = field.parentNode.querySelector('.validation-msg');
@@ -166,6 +197,145 @@ function initDateField(field) {
     field.addEventListener('input', () => field.setCustomValidity(''));
 }
 
+function restrictAlphaNumericInput(e) {
+    console.log('keypress on billingAddress:', e.key);
+    if (!/^[A-Za-z0-9 ]$/.test(e.key)) {
+        e.preventDefault();
+        pulseRed(e.target);
+        showValidationMessage(e.target, 'Letters and numbers only');
+    }
+}
+
+function initAlphaNumeric(field) {
+
+    if (!field) return;
+    field.addEventListener('keypress', restrictAlphaNumericInput);
+    field.addEventListener('input', () => {
+        const cleaned = field.value.replace(/[^A-Za-z0-9 ]/g, '');
+        if (cleaned !== field.value) {
+            field.value = cleaned;
+            pulseRed(field);
+            showValidationMessage(field, 'Letters and numbers only');
+        }
+    });
+}
+
+function handlePaymentFormSubmit(e) {
+    const form = e.target;
+    const rules = [
+        { field: '#cardNumber',
+            test:  v => /^\d{4}\s\d{4}\s\d{4}\s\d{4}$/.test(v),
+            message: '16 Digits required' },
+        { field: '#billingAddress',
+            test:  v => v.trim().length > 0,
+            message: 'Address required' },
+        { field: '#city',
+            test:  v => /^[A-Za-z\s]+$/.test(v),
+            message: 'Letters only' },
+        { field: '#zipCode',
+            test:  v => /^\d{5}$/.test(v),
+            message: '5-digit ZIP' },
+        { field: '#country',
+            test:  v => v !== '',
+            message: 'Select a country' }
+    ];
+
+    if (!validateForm(form, rules)) {
+        e.preventDefault();
+    }
+}
+
+function restrictCardNumberInput(e) {
+    if (!/^[\d ]$/.test(e.key)) {
+        e.preventDefault();
+        pulseRed(e.target);
+        showValidationMessage(e.target, 'Numbers & spaces only');
+    }
+}
+
+function initCardNumberField(field) {
+    if (!field) return;
+    field.addEventListener('keypress', restrictCardNumberInput);
+    field.addEventListener('input', () => {
+
+        let cleaned = field.value.replace(/[^0-9 ]/g, '');
+
+        const digits = cleaned.replace(/\D/g, '');
+
+        let finalDigits = digits;
+        if (digits.length > 16) {
+            finalDigits = digits.slice(0, 16);
+            pulseRed(field);
+            showValidationMessage(field, 'Max 16 digits');
+        }
+
+        const parts = finalDigits.match(/.{1,4}/g) || [];
+        const formatted = parts.join(' ');
+        if (formatted !== field.value) {
+            field.value = formatted;
+        }
+
+        toggleValidClass2(field, finalDigits.length === 16);
+    });
+}
+
+function initZipCodeField(field) {
+    if (!field) return;
+
+    // block non-digit keystrokes
+    field.addEventListener('keypress', restrictToDigits);
+
+    field.addEventListener('input', () => {
+
+        let digits = field.value.replace(/\D/g, '');
+
+        if (digits.length > 5) {
+            digits = digits.slice(0, 5);
+            field.value = digits;
+            pulseRed(field);
+            showValidationMessage(field, 'Max 5 digits');
+        } else if (field.value !== digits) {
+            field.value = digits;
+        }
+        toggleValidClass2(field, digits.length === 5);
+    });
+}
+
+function initPaymentForm() {
+
+    const form= document.getElementById('paymentForm');
+    if (!form) return;
+
+    initCardNumberField(document.getElementById('cardNumber'));
+    const billingField = document.getElementById('billingAddress');
+    initAlphaNumeric(billingField);
+    billingField.addEventListener('blur', () => {
+        const ok = billingField.value.trim().length > 0;
+        toggleValidClass2(billingField, ok);
+    });
+    const cityField = document.getElementById('city');
+    initAlphaOnly(cityField);
+    cityField.addEventListener('blur', () => {
+        const ok = /^[A-Za-z\s]+$/.test(cityField.value.trim());
+        toggleValidClass2(cityField, ok);
+    });
+
+    const zipField = document.getElementById('zipCode');
+    initZipCodeField(zipField);
+    zipField.addEventListener('input', () => {
+        const digits = zipField.value.replace(/\D/g, '');
+        toggleValidClass2(zipField, digits.length === 5);
+    });
+
+    const countryField = document.getElementById('country');
+    countryField.addEventListener('change', () => {
+        const ok = countryField.value !== '';
+        toggleValidClass2(countryField, ok);
+    });
+
+    form.addEventListener('submit', handlePaymentFormSubmit);
+}
+
 document.addEventListener('DOMContentLoaded', () => {
 
     const roomNumberField = document.getElementById('roomNumber');
@@ -209,6 +379,8 @@ document.addEventListener('DOMContentLoaded', () => {
     initDateField(editCheckoutField);
     initDigitsOnly(editUserIdField);
     initDigitsOnly(editRoomIdField);
+
+    initPaymentForm();
 });
 
 // Utility function for validation forms
