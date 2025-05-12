@@ -77,7 +77,20 @@ public class RoomService {
     return null;
   }
 
-  public Object getAvailableRoomCount() {
-    return null;
+
+  public int getAvailableRoomCount(String type, LocalDate in, LocalDate out) {
+
+    int baseline = roomDao.countAvailableRoomsByType(type);
+    int reserved = roomDao.countReservedRooms(type, in, out);
+    return Math.max(0, baseline - reserved);
   }
+
+  public Map<String,Integer> getAvailableRoomCounts(LocalDate in, LocalDate out) {
+    return Map.of(
+            "Basic", getAvailableRoomCount("Basic", in, out),
+            "Premium", getAvailableRoomCount("Premium", in, out),
+            "Presidential", getAvailableRoomCount("Presidential", in, out)
+    );
+  }
+
 }

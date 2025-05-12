@@ -9,6 +9,8 @@ import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
+import java.time.LocalDate;
+import java.sql.Date;
 
 public class RoomDao {
 
@@ -187,5 +189,29 @@ public class RoomDao {
         descriptions.put("Presidential", getRoomDescription("Presidential"));
         return descriptions;
     }
+
+
+    public int countReservedRooms(String type, LocalDate in, LocalDate out) {
+        String sql =
+                "SELECT COUNT(*) "
+                        + "  FROM reserves r "
+                        + "  JOIN rooms m ON r.roomId = m.id "
+                        + " WHERE m.type = ? "
+                        + "   AND NOT (r.checkOut <= ? OR r.checkIn >= ?)";
+        try (Connection conn = DbConnection.getConnection();
+             PreparedStatement ps = conn.prepareStatement(sql)) {
+            ps.setString(1, type);
+            // java.sql.Date wraps LocalDate
+            ps.setDate(2, Date.valueOf(in));
+            ps.setDate(3, Date.valueOf(out));
+            try (ResultSet rs = ps.executeQuery()) {
+                if (rs.next()) return rs.getInt(1);
+            }
+        } catch (SQLException e) {
+            System.err.println("Error counting reserved rooms: " + e.getMessage());
+        }
+        return 0;
+    }
+
 
 }
