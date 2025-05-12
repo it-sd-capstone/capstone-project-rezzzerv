@@ -3,3 +3,8 @@
     padding: 2rem 0;
 
 }
+
+.btnPrimaryAdmin,
+.btnSecondaryAdmin {
+    text-decoration: none;
+}
