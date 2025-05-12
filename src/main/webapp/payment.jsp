@@ -110,7 +110,7 @@
         </div>
         <div class="payment-form">
             <h2>Payment Information</h2>
-            <form action="processPayment" method="post">
+            <form id="paymentForm" action="processPayment" method="post">
                 <!-- hidden fields -->
                 <input type="hidden" name="reserveId" value="<%= reservationId %>" />
                 <input type="hidden" name="amount" value="<%= totalPrice %>" />
@@ -162,5 +162,6 @@
 </footer>
 
 <script src="js/main.js"></script>
+<script src="js/validation.js"></script>
 </body>
 </html>
