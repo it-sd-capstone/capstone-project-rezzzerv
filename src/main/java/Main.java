@@ -63,6 +63,8 @@ public class Main {
             System.out.println("23. show all room type");
             System.out.println("24. count  available room by type");
 
+            System.out.println("25. get payment by reserve id");
+
             System.out.print("Choose an option: ");
 
             int option = sc.nextInt();
@@ -432,6 +434,12 @@ public class Main {
                     String type = "Premium";
                     int count = roomDao.countAvailableRoomsByType(type);
                     System.out.println("room avalilable for type '" + type + "': " + count);
+                    break;
+                case 25:
+                    System.out.println("insert reserve id to find the associated payment");
+                    Long reservid = Long.parseLong(sc.nextLine());
+                    System.out.println(paymentDao.findPaymentByReserveId(reservid));
+                break;
                 case 0:
                     exit = true;
                     break;

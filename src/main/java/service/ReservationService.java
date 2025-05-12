@@ -1,8 +1,10 @@
 package service;
 
+import daos.PaymentDao;
 import daos.RoomDao;
 import daos.ReserveDao;
 import daos.UserDao;
+import model.payment.Payment;
 import model.rooms.Room;
 import model.reserve.Reserve;
 import model.users.User;
@@ -16,11 +18,13 @@ public class ReservationService {
     private ReserveDao reserveDao;
     private RoomDao roomDao;
     private UserDao userDao;
+    private PaymentDao paymentDao;
 
     public ReservationService() {
         this.reserveDao = new ReserveDao();
         this.roomDao = new RoomDao();
         this.userDao = new UserDao();
+        this.paymentDao = new PaymentDao();
     }
 
     public Reserve createReservation(Long userId, String roomType, LocalDate checkIn, LocalDate checkOut) throws Exception {
@@ -166,6 +170,30 @@ public class ReservationService {
     }
     public void deleteReservation(Long id) {
         reserveDao.deleteReserve(id);
+    }
+
+    public void deleteReservationByAdmin(Long id){
+
+        //find  reserve by id
+        Reserve reserve = reserveDao.getReserveById(id);
+
+        if (reserve == null) {
+            System.out.println("reservation not found.");
+            return;
+        }
+
+        // find payment associated to the reserve id
+        Payment payment = paymentDao.findPaymentByReserveId(id);
+
+        // if payment exist eliminate payment first
+        if (payment != null) {
+            paymentDao.deletePayment(payment.getId()); // use the payment id
+            System.out.println("payment eliminated successfully.");
+        }
+
+        // delete reserve
+        reserveDao.deleteReserve(id);
+        System.out.println("reservation eliminated successfully.");
     }
 
     public Reserve getReservationById(Long id) {

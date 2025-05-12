@@ -19,13 +19,15 @@ import service.UserService;
 
 @WebServlet("/deleteReservation")
 public class DeleteReservationServlet extends HttpServlet {
-  private final ReservationService svc = new ReservationService();
+  private final ReservationService reservationService = new ReservationService();
 
   @Override
   protected void doPost(HttpServletRequest req, HttpServletResponse resp)
           throws ServletException, IOException {
+
     Long id = Long.parseLong(req.getParameter("reservationId"));
-    svc.deleteReservation(id);
+
+    reservationService.deleteReservationByAdmin(id);
     req.getSession().setAttribute("flash", "Reservation deleted.");
     resp.sendRedirect("admin?section=reservations");
   }

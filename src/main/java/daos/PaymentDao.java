@@ -111,6 +111,33 @@ public class PaymentDao {
         }
     }
 
+    public Payment findPaymentByReserveId(Long reserveId){
+        String sql = "SELECT * FROM payments WHERE reserveId = ?";
+        Payment payment = null;
+
+        try (Connection conn = DbConnection.getConnection()) {
+            PreparedStatement pstmt = conn.prepareStatement(sql);
+
+            pstmt.setLong(1, reserveId);
+            ResultSet rs = pstmt.executeQuery();
+
+
+            if (rs.next()) {
+                payment = new Payment();
+                payment.setId(rs.getLong("id"));;
+
+                Reserve reserve = new Reserve();
+                reserve.setId(rs.getLong("reserveId"));
+                payment.setReserve(reserve);
+            }
+
+        } catch (SQLException e) {
+            throw new RuntimeException(e);
+        }
+
+        return payment;
+    }
+
 
     private Payment mapRowToPayment(ResultSet rs) throws SQLException {
         Payment payment = new Payment();
