@@ -183,7 +183,7 @@
             </table>
         </div>
         <div class="mt-4">
-            <a href="booking.jsp" class="btn btn-primary">Make Another Reservation</a>
+            <a href="booking.jsp" class="btn auth-btn enabled">Make Another Reservation</a>
         </div>
         <% } %>
     </div>

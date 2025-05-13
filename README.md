@@ -85,6 +85,6 @@ After building and launching the project through IntelliJ:
 - To confirm servlet setup, visit the TestServlet:  
   (http://localhost:8080/rezzzerv/info)
 
-- To test admin CRUD, use the following credentials:
+- To test as admin, use the following credentials:
   UN: admin@email.com
   PW: ReZZZerv123!
