@@ -631,8 +631,7 @@ footer {
     font-size: 1.2rem;
     position: absolute;
     right: 10px;
-    top: 50%;
-    transform: translateY(-50%);
+    top: 7px; /* Fixed vertical position instead of centering */
     opacity: 1;
 }
 

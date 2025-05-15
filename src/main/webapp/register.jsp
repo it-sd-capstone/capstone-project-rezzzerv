@@ -67,7 +67,7 @@
         <input type="password" id="confirm-password" name="confirm-password" placeholder="Confirm Password" required>
       </div>
 
-      <div id="password-errors" class="error-messages"></div>
+      <div id="password-errors" class="error-banner" style="display: none;"></div>
 
       <button type="submit" class="btn auth-btn" id="register-btn" disabled>Register</button>
     </form>

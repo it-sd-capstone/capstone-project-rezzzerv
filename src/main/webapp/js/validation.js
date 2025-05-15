@@ -42,11 +42,9 @@ function showValidationMessage(field, message) {
     if (existing) existing.remove();
 
     const msg = document.createElement('div');
-    msg.className = 'validation-msg';
+    msg.className = 'validation-msg error-banner';
     msg.textContent = message;
     field.parentNode.appendChild(msg);
-
-    setTimeout(() => msg.remove(), 2000);
 }
 
 function restrictToDigits(e) {
@@ -393,6 +391,35 @@ function toggleValidClass(input, isValid) {
     }
 }
 
+// Disallow spaces in input field
+function preventSpaces(field) {
+    if (!field) return;
+    field.addEventListener('keypress', e => {
+        if (e.key === ' ') {
+            e.preventDefault();
+            pulseRed(field);
+            showValidationMessage(field, 'Spaces are not allowed');
+        }
+    });
+}
+
+// Format phone numbers
+function formatPhoneNumber(value) {
+    const digits = value.replace(/\D/g, '').slice(0, 10);
+
+    const part1 = digits.slice(0, 3);
+    const part2 = digits.slice(3, 6);
+    const part3 = digits.slice(6, 10);
+
+    let formatted = '';
+    if (part1) formatted += `(${part1}`;
+    if (part1 && part1.length === 3) formatted += ') ';
+    if (part2) formatted += part2;
+    if (part3) formatted += `-${part3}`;
+
+    return formatted;
+}
+
 
 // Register Form Validation
 const registerForm = document.getElementById('register-form');
@@ -403,11 +430,38 @@ if (registerForm && registerBtn) {
     const lastNameInput = document.getElementById('lastName');
     const emailInput = document.getElementById('email');
     const phoneInput = document.getElementById('phone');
+    if (phoneInput) {
+        phoneInput.addEventListener('input', () => {
+            phoneInput.value = formatPhoneNumber(phoneInput.value);
+
+            const digitsOnly = phoneInput.value.replace(/\D/g, '');
+            const isValidPhone = digitsOnly.length === 10;
+
+            toggleValidClass(phoneInput, isValidPhone);
+
+            const existingMsg = phoneInput.parentNode.querySelector('.validation-msg');
+            if (!isValidPhone) {
+                if (!existingMsg) {
+                    showValidationMessage(phoneInput, "Enter a valid 10-digit US phone number", false);
+                }
+            } else if (existingMsg) {
+                existingMsg.remove();
+            }
+
+            validateForm();
+        });
+    }
+
     const passwordInput = document.getElementById('password');
     const confirmPasswordInput = document.getElementById('confirm-password');
     const errorContainer = document.getElementById('password-errors');
     const strengthBar = document.getElementById('strength-bar');
     const formError = document.getElementById('form-error');
+
+    // Prevent spaces in name fields
+    preventSpaces(nameInput);
+    preventSpaces(lastNameInput);
+
     let emailTaken = false;
     let emailCheckTimeout;
 
@@ -449,11 +503,13 @@ if (registerForm && registerBtn) {
     });
 
     function validateForm() {
+        const hasNoSpaces = str => !/\s/.test(str);
+
         const isNameValid = nameInput.value.trim().length >= 2;
         const isLastNameValid = lastNameInput.value.trim().length >= 2;
-        const isPhoneValid = phoneInput.value.trim().length >= 10;
-        const isEmailValid = emailRegex.test(emailInput.value.trim());
-        const isPasswordValid = validatePassword(passwordInput.value, false);
+        const isPhoneValid = /^\(\d{3}\) \d{3}-\d{4}$/.test(phoneInput.value.trim());
+        const isEmailValid = emailRegex.test(emailInput.value.trim()) && hasNoSpaces(emailInput.value);
+        const isPasswordValid = validatePassword(passwordInput.value, false) && hasNoSpaces(passwordInput.value);
         const isPasswordMatch = passwordInput.value === confirmPasswordInput.value && passwordInput.value.length > 0;
 
         toggleValidClass(nameInput, isNameValid);
@@ -525,10 +581,15 @@ if (registerForm && registerBtn) {
     }
 
     function displayErrors(errors) {
+        const container = document.getElementById('password-errors');
+        if (!container) return;
+
         if (errors.length > 0) {
-            errorContainer.innerHTML = "<ul><li>" + errors.join("</li><li>") + "</li></ul>";
+            container.innerHTML = "<ul><li>" + errors.join("</li><li>") + "</li></ul>";
+            container.style.display = 'block';
         } else {
-            errorContainer.innerHTML = "";
+            container.innerHTML = "";
+            container.style.display = 'none';
         }
     }
 
@@ -556,10 +617,80 @@ if (registerForm && registerBtn) {
         }
     }
 
-    nameInput.addEventListener('input', validateForm);
-    lastNameInput.addEventListener('input', validateForm);
-    phoneInput.addEventListener('input', validateForm);
-    emailInput.addEventListener('input', validateForm);
+    nameInput.addEventListener('blur', () => {
+        const isValid = nameInput.value.trim().length >= 2;
+        toggleValidClass(nameInput, isValid);
+
+        const existingMsg = nameInput.parentNode.querySelector('.validation-msg');
+        if (!isValid) {
+            if (!existingMsg) {
+                showValidationMessage(nameInput, "Name must be at least 2 characters.");
+            }
+            pulseRed(nameInput);
+        } else if (existingMsg) {
+            existingMsg.remove();
+        }
+
+        validateForm();
+    });
+
+    lastNameInput.addEventListener('blur', () => {
+        const isValid = lastNameInput.value.trim().length >= 2;
+        toggleValidClass(lastNameInput, isValid);
+
+        const existingMsg = lastNameInput.parentNode.querySelector('.validation-msg');
+        if (!isValid) {
+            if (!existingMsg) {
+                showValidationMessage(lastNameInput, "Last name must be at least 2 characters.");
+            }
+            pulseRed(lastNameInput);
+        } else if (existingMsg) {
+            existingMsg.remove();
+        }
+
+        validateForm();
+    });
+
+    phoneInput.addEventListener('blur', () => {
+        phoneInput.value = formatPhoneNumber(phoneInput.value);
+
+        const digitsOnly = phoneInput.value.replace(/\D/g, '');
+        const isValidPhone = digitsOnly.length === 10;
+
+        toggleValidClass(phoneInput, isValidPhone);
+
+        const existingMsg = phoneInput.parentNode.querySelector('.validation-msg');
+        if (!isValidPhone) {
+            if (!existingMsg) {
+                showValidationMessage(phoneInput, "Enter a valid 10-digit US phone number");
+            }
+            pulseRed(phoneInput);
+        } else if (existingMsg) {
+            existingMsg.remove();
+        }
+
+        validateForm();
+    });
+
+    emailInput.addEventListener('blur', () => {
+        const email = emailInput.value.trim();
+        const isValid = emailRegex.test(email) && !/\s/.test(email);
+
+        toggleValidClass(emailInput, isValid && !emailTaken);
+
+        const existingMsg = emailInput.parentNode.querySelector('.validation-msg');
+        if (!isValid) {
+            if (!existingMsg) {
+                showValidationMessage(emailInput, "Must be a valid email format.");
+            }
+            pulseRed(emailInput);
+        } else if (existingMsg) {
+            existingMsg.remove();
+        }
+
+        validateForm();
+    });
+
     passwordInput.addEventListener('input', validateForm);
     confirmPasswordInput.addEventListener('input', validateForm);
 }
