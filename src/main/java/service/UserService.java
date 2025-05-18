@@ -55,6 +55,9 @@ public class UserService {
     }
 
     public void updateUser(User user) {
+        // hash the password for security.
+        String hashPassword = BCrypt.hashpw(user.getPassword(), BCrypt.gensalt());
+        user.setPassword(hashPassword);
         userDao.updateUser(user);
     }
     public void deleteUser(Long id) {
