@@ -110,6 +110,34 @@
     background-color: #5a0b8d;
 }
 
+.room-option.unavailable {
+    opacity: 0.8;
+    pointer-events: none;
+    cursor: not-allowed;
+    position: relative;
+}
+
+.room-option.unavailable::before {
+    content: "";
+    position: absolute;
+    top: 0; left: 0; right: 0; bottom: 0;
+    background: rgba(255,255,255,0.8);
+    z-index: 10;
+}
+
+.room-option.unavailable::after {
+    display: inline-block;
+    content: "Unavailable during the selected date range.";
+    position: absolute;
+    top: 60%; left: 50%;
+    transform: translate(-50%,-50%);
+    background: white;
+    padding: 0.5rem 2.5rem 2.5rem;
+    font-size: 1.2rem;
+    color: black;
+    z-index: 11;
+}
+
 @media (max-width: 768px) {
     .room-options {
         grid-template-columns: 1fr;
