@@ -28,6 +28,18 @@
 <main>
     <section class="auth-container">
         <h1 class="auth-title">Log In</h1>
+
+        <%
+            String sessionExpired = request.getParameter("sessionExpired");
+            if (sessionExpired != null && sessionExpired.equals("true")) {
+        %>
+        <div class="error-banner">
+            Your session has expired or was ended in another window. Please log in again.
+        </div>
+        <%
+            }
+        %>
+
         <form action="login" method="POST" class="auth-form" id="login-form">
             <div class="input-wrapper">
                 <input type="email" id="login-email" name="email" placeholder="Email" required>

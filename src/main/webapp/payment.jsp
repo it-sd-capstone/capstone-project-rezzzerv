@@ -55,7 +55,7 @@
     <link rel="stylesheet" href="css/payment.css">
     <link rel="stylesheet" href="css/dropdown.css">
 </head>
-<body>
+<body<% if (session.getAttribute("user") != null) { %> data-user-id="<%= ((User)session.getAttribute("user")).getId() %>"<% } %>>
 <header>
     <nav>
         <div class="logo"><a href="index.jsp">ReZZZerv</a></div>
@@ -79,7 +79,7 @@
                 <a href="#" class="user-name"><%= currentUser.getName() %></a>
                 <div class="dropdown-content">
                     <a href="myaccount.jsp">My Account</a>
-                    <a href="logout.jsp">Logout</a>
+                    <a href="logout">Logout</a>
                 </div>
             </li>
             <% } %>
@@ -163,5 +163,8 @@
 
 <script src="js/main.js"></script>
 <script src="js/validation.js"></script>
+<% if (session.getAttribute("user") != null) { %>
+<script src="js/sessionMonitor.js"></script>
+<% } %>
 </body>
 </html>
