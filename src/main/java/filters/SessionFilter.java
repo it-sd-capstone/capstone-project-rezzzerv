@@ -25,7 +25,9 @@ public class SessionFilter implements Filter {
             "/images/",
             "/login",
             "/register",
-            "/logout"
+            "/logout",
+            "/check-email" // required to bypass session filtering while checking if an email is already registered
+
     );
 
     // Admin-only pages
