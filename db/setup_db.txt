@@ -88,6 +88,7 @@ CREATE TABLE `rooms` (
   `roomNumber` int NOT NULL,
   `available` tinyint(1) NOT NULL,
   `type` varchar(20) NOT NULL,
+  `price` decimal(10,2) NOT NULL,
   PRIMARY KEY (`id`),
   CONSTRAINT `rooms_chk_1` CHECK ((`type` in (_utf8mb4'Basic',_utf8mb4'Premium',_utf8mb4'Presidential')))
 ) ENGINE=InnoDB AUTO_INCREMENT=2 DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_0900_ai_ci;
