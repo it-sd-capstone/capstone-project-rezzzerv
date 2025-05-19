@@ -23,17 +23,6 @@ public class DeleteRoomServlet extends HttpServlet {
     String roomNumber = req.getParameter("roomNumber");
     long id = Long.parseLong(req.getParameter("roomId"));
 
-    //original try///////
-//    try {
-//      roomService.deleteRoom(id);
-//      req.getSession().setAttribute("flash", "Room ”"   + roomNumber + "”  deleted successfully.");
-//      resp.sendRedirect("admin");
-//    } catch (SQLException e) {
-//      throw new ServletException("Error deleting room", e);
-//    }
-
-
-
   // new try
     try {
       // call the methods and set it as a boolean

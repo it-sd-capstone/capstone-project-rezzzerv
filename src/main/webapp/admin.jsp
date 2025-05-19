@@ -150,20 +150,6 @@
             </div>
             <div class="adminContainer">
                 <section id="roomsListSection">
-    <%--                <div id="flashContainer">--%>
-    <%--                    <%--%>
-    <%--                        String flash = (String) request.getAttribute("flash");--%>
-    <%--                        if (flash != null) {--%>
-    <%--                    %>--%>
-    <%--                    <div class="flash-message success">--%>
-    <%--                        <span class="flash-text"><%= flash %></span>--%>
-    <%--                        <button type="button" class="flash-close" aria-label="Dismiss">&times;</button>--%>
-    <%--                    </div>--%>
-    <%--                    <%--%>
-    <%--                        }--%>
-    <%--                    %>--%>
-    <%--                </div>--%>
-
                         <div id="flashContainer">
                             <%
                                 String flash = (String) request.getAttribute("flash");
@@ -339,7 +325,6 @@
                             <th>Last Name</th>
                             <th>Phone</th>
                             <th>Email</th>
-<%--                            <th>Password</th>--%>
                             <th>User Type</th>
                             <th>Actions</th>
                         </tr>
@@ -354,7 +339,6 @@
                             <td class="lastNameCell"><%= user.getLastName() %></td>
                             <td class="phoneCell"><%= user.getPhone() %></td>
                             <td class="emailCell"><%= user.getEmail() %></td>
-<%--                            <td class="passwordCell"><%= user.getPassword() %></td>--%>
                             <td class="userTypeCell"><%= user.getUserType() %></td>
                             <td class="actionCell">
                                 <button

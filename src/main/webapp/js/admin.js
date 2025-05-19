@@ -8,7 +8,6 @@ document.addEventListener('DOMContentLoaded', () => {
     initSectionToggle();
     initAddUserForm()
     initEditReservationModal();
-    initDeleteReservationConfirmation();
     initRoomTypePrice();
 });
 
@@ -146,15 +145,6 @@ function initEditReservationModal() {
         modal.style.display   = 'none';
     });
 }
-
-
-// function clearForm() {
-//     document.getElementById('roomId').value       = '';
-//     document.getElementById('roomNumber').value   = '';
-//     document.getElementById('roomType').value     = '';
-//     document.getElementById('roomAvailable').value = '';
-//     document.getElementById('roomPrice').value    = '';
-// }
 
 function clearForm(id) {
     const form = document.getElementById(id);
