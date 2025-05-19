@@ -23,7 +23,8 @@ To run this project:
 3. Configure dependencies:
     - Go to File → Project Structure → Modules → Dependencies
     - Click the + button → JARs or directories
-    - Navigate to the lib/ folder and add all the included JARs
+    - Select each listed file, Apply, and OK.
+    - IF THE JARS ARE NOT AUTOMATICALLY LISTED...navigate to the lib/ folder and add all the included JARs
 
 4. Set up your Tomcat server:
     - Go to Run → Edit Configurations
@@ -43,7 +44,7 @@ To run this project:
    - Create a resources directory in src/main.
    - Right-click on the resources folder and Mark Directory as Resources Root.
    - Create an .env file in the resources folder.
-   - Add the following lines of text to the .env file using your local database credentials:
+   - USING YOUR LOCAL DB CREDENTIALS: Add and modify the following lines of text to the .env file:
        DB_HOST=localhost 
        DB_NAME=rezzzerv_db
        DB_USER=root
