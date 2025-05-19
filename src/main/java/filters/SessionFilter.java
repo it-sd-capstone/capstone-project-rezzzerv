@@ -13,6 +13,7 @@ public class SessionFilter implements Filter {
 
     // Pages that don't require authentication
     private static final List<String> PUBLIC_PAGES = Arrays.asList(
+            "/",
             "/login.jsp",
             "/register.jsp",
             "/index.jsp",
@@ -38,12 +39,21 @@ public class SessionFilter implements Filter {
     @Override
     public void doFilter(ServletRequest request, ServletResponse response, FilterChain chain)
             throws ServletException, IOException {
-
         HttpServletRequest httpRequest = (HttpServletRequest) request;
         HttpServletResponse httpResponse = (HttpServletResponse) response;
         HttpSession session = httpRequest.getSession(false);
 
-        String path = httpRequest.getRequestURI().substring(httpRequest.getContextPath().length());
+        // Get the requested URI and context path
+        String requestURI = httpRequest.getRequestURI();
+        String contextPath = httpRequest.getContextPath();
+        String path = requestURI.substring(contextPath.length());
+
+        // Handle the case when the URI is just the context path (root of the application)
+        if (path.equals("") || path.equals("/")) {
+            // Redirect to index.jsp explicitly
+            httpResponse.sendRedirect(contextPath + "/index.jsp");
+            return;
+        }
 
         // Allow access to public resources
         if (isPublicResource(path)) {
@@ -52,7 +62,6 @@ public class SessionFilter implements Filter {
         }
 
         boolean isLoggedIn = (session != null && session.getAttribute("user") != null);
-
         if (!isLoggedIn) {
             // User is not logged in, redirect to login page
             httpResponse.sendRedirect(httpRequest.getContextPath() + "/login.jsp?unauthorized=true");
@@ -72,7 +81,6 @@ public class SessionFilter implements Filter {
         if (isAdminResource(path)) {
             User user = (User) session.getAttribute("user");
             boolean isAdmin = user.getClass().getSimpleName().equals("Admin");
-
             if (!isAdmin) {
                 httpResponse.sendRedirect(httpRequest.getContextPath() + "/login.jsp?adminRequired=true");
                 return;
@@ -82,6 +90,7 @@ public class SessionFilter implements Filter {
         // All checks passed, proceed with the request
         chain.doFilter(request, response);
     }
+
 
     private boolean isPublicResource(String path) {
         return PUBLIC_PAGES.stream().anyMatch(path::startsWith);
