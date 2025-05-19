@@ -163,7 +163,7 @@
                     <div class="room-options">
                         <div class="room-option" data-room-type="Basic" onclick="selectRoom('Basic')">
                             <h3>Basic Room</h3>
-                            <div class="room-price">$<%= roomPrices.get("Basic") %>/night</div>
+                            <div class="room-price">$<%= String.format("%.2f", roomPrices.get("Basic")) %>/night</div>
                             <div class="room-availability">
                                 rooms available: <span id="countBasic"><%= roomInventory.get("Basic") %></span>
                             </div>
@@ -172,7 +172,7 @@
 
                         <div class="room-option" data-room-type="Premium" onclick="selectRoom('Premium')">
                             <h3>Premium Room</h3>
-                            <div class="room-price">$<%= roomPrices.get("Premium") %>/night</div>
+                            <div class="room-price">$<%= String.format("%.2f", roomPrices.get("Premium")) %>/night</div>
                             <div class="room-availability">
                                 rooms available: <span id="countPremium"><%= roomInventory.get("Premium") %></span>
                             </div>
@@ -181,7 +181,7 @@
 
                         <div class="room-option" data-room-type="Presidential" onclick="selectRoom('Presidential')">
                             <h3>Presidential Suite</h3>
-                            <div class="room-price">$<%= roomPrices.get("Presidential") %>/night</div>
+                            <div class="room-price">$<%= String.format("%.2f", roomPrices.get("Presidential")) %>/night</div>
                             <div class="room-availability">
                                 rooms available: <span id="countPresidential"><%= roomInventory.get("Presidential") %></span>
                             </div>
@@ -213,9 +213,10 @@
 
 <!-- Add room prices as data attributes for JavaScript -->
 <div id="roomPrices"
-     data-basic-price="<%= roomPrices.get("Basic") %>"
-     data-premium-price="<%= roomPrices.get("Premium") %>"
-     data-presidential-price="<%= roomPrices.get("Presidential") %>"></div>
+     data-basic-price="<%= String.format("%.2f", roomPrices.get("Basic")) %>"
+     data-premium-price="<%= String.format("%.2f", roomPrices.get("Premium")) %>"
+     data-presidential-price="<%= String.format("%.2f", roomPrices.get("Presidential")) %>"></div>
+
 
 <script src="js/booking.js"></script>
 <script src="js/RoomCount.js"></script>

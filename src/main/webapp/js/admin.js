@@ -14,9 +14,9 @@ document.addEventListener('DOMContentLoaded', () => {
 
 function initRoomTypePrice() {
     const ROOM_PRICES = {
-        Basic:        139.00,
-        Premium:      219.00,
-        Presidential: 499.00
+        Basic:        139.59,
+        Premium:      219.59,
+        Presidential: 499.59
     };
 
     const forms = [
