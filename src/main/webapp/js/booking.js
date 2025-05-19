@@ -101,12 +101,30 @@ document.addEventListener('DOMContentLoaded', function() {
         // Only update room type and total if a room is selected
         if (roomType) {
             summaryRoomType.textContent = roomType;
-            const roomPrice = roomPrices[roomType];
+            const roomPrice = roomPrices[roomType] || 0;
+
+            // Format the room price with two decimal places
+            const formattedRoomPrice = roomPrice.toFixed(2);
+
+            // Calculate and format total with two decimal places
             const total = (roomPrice * nights).toFixed(2);
+
+            // Update the summary total with properly formatted price
             summaryTotal.textContent = total;
 
             // Show booking summary
             bookingSummary.style.display = 'block';
+
+            // Update room price displays in the room options (if needed)
+            document.querySelectorAll('.room-option').forEach(option => {
+                const type = option.getAttribute('data-room-type');
+                if (type && roomPrices[type]) {
+                    const priceElement = option.querySelector('.room-price');
+                    if (priceElement) {
+                        priceElement.textContent = `$${roomPrices[type].toFixed(2)}/night`;
+                    }
+                }
+            });
         } else {
             summaryRoomType.textContent = 'Not selected';
             summaryTotal.textContent = '0.00';
