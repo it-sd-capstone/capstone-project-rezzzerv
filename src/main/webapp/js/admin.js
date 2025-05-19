@@ -8,6 +8,7 @@ document.addEventListener('DOMContentLoaded', () => {
     initSectionToggle();
     initAddUserForm()
     initEditReservationModal();
+    initDeleteReservationConfirmation();
     initRoomTypePrice();
 });
 
