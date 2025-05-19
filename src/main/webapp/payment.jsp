@@ -121,6 +121,12 @@
                     <label for="cardNumber">Card Number</label>
                     <input type="text" id="cardNumber" name="cardNumber"
                            placeholder="XXXX XXXX XXXX XXXX" required>
+                    <%
+                        String cardError = (String) request.getAttribute("cardError");
+                        if (cardError != null) {
+                    %>
+                    <div class="validation-msg"><%= cardError %></div>
+                    <% } %>
                 </div>
 
                 <!-- billing info is optional by now -->

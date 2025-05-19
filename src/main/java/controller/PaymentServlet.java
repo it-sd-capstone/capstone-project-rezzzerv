@@ -52,6 +52,11 @@ public class PaymentServlet extends HttpServlet {
 
         Long reserveId = ((Reserve) session.getAttribute("reserve")).getId();
 
+        if (!luhnCheck(cardNumber)) {
+            request.setAttribute("cardError", "Invalid card number");
+            request.getRequestDispatcher("payment.jsp").forward(request, response);
+            return;
+        }
 
         Double amount = Double.parseDouble(amountStr);
         LocalDate paidDate = LocalDate.parse(dateStr, DateTimeFormatter.ofPattern("yyyy-MM-dd"));
@@ -142,6 +147,22 @@ public class PaymentServlet extends HttpServlet {
 
         // redirect to payment form
         response.sendRedirect("payment.jsp");
+    }
+
+    private static boolean luhnCheck(String ccNum) {
+        String digits = ccNum.replaceAll("\\D", "");
+        int sum = 0;
+        boolean alternate = false;
+        for (int i = digits.length() - 1; i >= 0; i--) {
+            int d = Character.getNumericValue(digits.charAt(i));
+            if (alternate) {
+                d *= 2;
+                if (d > 9) d -= 9;
+            }
+            sum += d;
+            alternate = !alternate;
+        }
+        return sum % 10 == 0;
     }
 
 }
