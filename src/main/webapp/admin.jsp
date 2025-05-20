@@ -339,7 +339,6 @@
                             <th>Last Name</th>
                             <th>Phone</th>
                             <th>Email</th>
-<%--                            <th>Password</th>--%>
                             <th>User Type</th>
                             <th>Actions</th>
                         </tr>
@@ -354,7 +353,6 @@
                             <td class="lastNameCell"><%= user.getLastName() %></td>
                             <td class="phoneCell"><%= user.getPhone() %></td>
                             <td class="emailCell"><%= user.getEmail() %></td>
-<%--                            <td class="passwordCell"><%= user.getPassword() %></td>--%>
                             <td class="userTypeCell"><%= user.getUserType() %></td>
                             <td class="actionCell">
                                 <button

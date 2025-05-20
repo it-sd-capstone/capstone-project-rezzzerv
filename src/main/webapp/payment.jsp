@@ -143,9 +143,6 @@
                     <select id="country" name="country" required>
                         <option value="">Select Country</option>
                         <option value="US">United States</option>
-                        <option value="CA">Canada</option>
-                        <option value="MX">Mexico</option>
-                        <option value="UK">United Kingdom</option>
                     </select>
                 </div>
                 <div class="form-actions">
